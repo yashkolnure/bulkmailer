@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Sender</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+  /* Additional styles for spacing */
+  #result {
+      margin-top: 20px; /* Space above the result div */
+      padding: 10px;
+      background-color: #e9ecef;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 16px;
+      color: #495057;
+  }
+
+  #logoutButton {
+      margin-top: 20px; /* Space above the logout button */
+  }
+
+  /* Style for the new button */
+  #smtpButton {
+      display: inline-block; /* Makes the anchor behave like a button */
+      padding: 10px 15px;
+      margin-top: 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none; /* Removes underline */
+      border-radius: 4px;
+  }
+
+  #smtpButton:hover {
+      background-color: #0056b3; /* Darker shade on hover */
+  }
+</style>
+<body>
+  <div class="container">
+    <h1>Send an Email</h1>
+    
+    <form id="emailForm">
+      <!-- CSV File Upload -->
+      <label for="csvFile">Upload CSV (for recipient emails):</label>
+      <input type="file" id="csvFile" accept=".csv">
+
+      <!-- This will hold the emails extracted from CSV -->
+      <label for="to">Recipient Emails:</label>
+      <input type="text" id="to" name="to" placeholder="Recipient emails will appear here">
+
+      <label for="subject">Subject:</label>
+      <input type="text" id="subject" name="subject" placeholder="Email subject" required>
+
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" placeholder="Write your message here..." required></textarea>
+
+      <button type="submit">Send Email</button>
+
+      <div id="result"></div>
+      
+      <div>
+        <button id="logoutButton">Logout</button> <!-- Logout Button -->
+      </div>
+      
+    </form>
+
+  </div>
+
+  <!-- Include PapaParse for CSV parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    // Logout functionality
+    document.getElementById('logoutButton').addEventListener('click', async () => {
+      const response = await fetch('/logout', { method: 'GET', credentials: 'include' });
+      if (response.ok) {
+        window.location.href = '/login'; // Redirect to login page after logout
+      } else {
+        alert('Error logging out. Please try again.');
+      }
+    });
+  </script>       
+</body>
+</html>

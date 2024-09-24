@@ -1,34 +1,50 @@
+// Function to validate email format
+function isValidEmail(email) {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email regex
+  return emailPattern.test(email);
+}
+
+// Event listener for email form submission
 document.getElementById('emailForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-  
-    const to = document.getElementById('to').value.split(',').map(email => email.trim());
-    const subject = document.getElementById('subject').value;
-    const message = document.getElementById('message').value;
-  
-    const response = await fetch('/send-email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ to, subject, message }),
-    });
-  
-    const result = await response.json();
-    const resultDiv = document.getElementById('result');
-  
-    if (response.ok) {
-      resultDiv.textContent = 'Email sent successfully!';
-      resultDiv.style.color = 'green';
-    } else {
-      resultDiv.textContent = 'Error: ' + result.message;
-      resultDiv.style.color = 'red';
-    }
+  event.preventDefault();
+
+  const to = document.getElementById('to').value.split(',').map(email => email.trim());
+  const subject = document.getElementById('subject').value;
+  const message = document.getElementById('message').value;
+
+  const validRecipients = to.filter(email => isValidEmail(email)); // Filter valid emails
+
+  const response = await fetch('/send-email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ to: validRecipients, subject, message }),
   });
-  
-  document.getElementById('csvFile').addEventListener('change', handleFileUpload);
-document.getElementById('emailForm').addEventListener('submit', sendEmail);
+
+  const resultDiv = document.getElementById('result');
+
+  if (response.ok) {
+    const result = await response.json();
+    resultDiv.innerHTML += `<span style="color: green;">${result.message}</span><br>`;
+  } else {
+    const result = await response.json();
+    resultDiv.innerHTML += `<span style="color: red;">Error: ${result.message}</span><br>`;
+  }
+});
+
+// WebSocket client setup
+const socket = new WebSocket('ws://localhost:3000');
+
+// When a new WebSocket message is received
+socket.onmessage = (event) => {
+  const resultDiv = document.getElementById('result');
+  resultDiv.innerHTML += `<span>${event.data}</span><br>`;
+};
 
 // Handle CSV File Upload and Parse
+document.getElementById('csvFile').addEventListener('change', handleFileUpload);
+
 function handleFileUpload(event) {
   const file = event.target.files[0]; // Get the uploaded file
   if (!file) {
@@ -38,34 +54,11 @@ function handleFileUpload(event) {
 
   Papa.parse(file, {
     complete: function(results) {
-      // Assuming the emails are in the first column of the CSV
-      const emailList = results.data.map(row => row[0]).filter(Boolean); // Filters out empty rows
-      document.getElementById('to').value = emailList.join(','); // Put emails into "to" field
-    }
-  });
-}
-
-// Send Email to Backend
-function sendEmail(event) {
-  event.preventDefault(); // Prevent form from reloading the page
-
-  const to = document.getElementById('to').value;
-  const subject = document.getElementById('subject').value;
-  const message = document.getElementById('message').value;
-
-  fetch('/api/send-email', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+      const emailList = results.data
+        .map(row => row[0]) // Assuming emails are in the first column
+        .filter(email => isValidEmail(email)); // Filter out invalid emails
+      document.getElementById('to').value = emailList.join(','); // Put valid emails into "to" field
     },
-    body: JSON.stringify({ to, subject, message }), // Send emails, subject, and message to backend
-  })
-  .then(response => response.json())
-  .then(data => {
-    document.getElementById('result').innerText = 'Email sent successfully!';
-  })
-  .catch(error => {
-    console.error('Error sending email:', error);
-    document.getElementById('result').innerText = 'Error sending email.';
+    header: false,
   });
 }
