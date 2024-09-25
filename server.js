@@ -12,7 +12,8 @@ require('dotenv').config();
 const cors = require('cors');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+const mongoUri = process.env.MONGO_URI;
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,7 +23,6 @@ app.use(cors());
 app.use(express.static('public')); // Serve static files from the 'public' folder
 
 // MongoDB connection
-const mongoUri = 'mongodb+srv://yashkolnure:TYHOqElmpIsGzaBf@cluster1.d31hn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1';
 
 mongoose.connect(mongoUri)
     .then(() => {
@@ -189,7 +189,6 @@ const sendEmail = async (transporter, mailOptions, retries = 3) => {
 };
 
 // POST route to send emails
-// POST route to send emails
 app.post('/send-email', authenticateUser, async (req, res) => {
   const { to, subject, message } = req.body;
 
@@ -205,7 +204,7 @@ app.post('/send-email', authenticateUser, async (req, res) => {
           return res.status(400).json({ message: 'No SMTP credentials found for the user.' });
       }
 
-      const batchSize = 5; // Define how many emails each SMTP credential should handle
+      const batchSize = 3; // Define how many emails each SMTP credential should handle
 
       for (let i = 0; i < to.length; i++) {
           const smtpIndex = Math.floor(i / batchSize) % user.smtpCredentials.length; // Cycle through credentials

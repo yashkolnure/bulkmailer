@@ -9,6 +9,15 @@
             box-sizing: border-box;
         }
 
+        .logo {
+            width: 80px; /* Adjust size as needed */
+            height: 80px; /* Adjust size as needed */
+            border-radius: 50%; /* Makes it circular */
+            margin-bottom: 1.5em;
+            border: 4px solid #007bff; /* Add a border with desired color and thickness */
+            object-fit: cover; /* Ensures the image fits well within the circle */
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #74ebd5, #9face6);
@@ -34,7 +43,7 @@
         }
 
         h2 {
-            margin-bottom: 1.5em;
+            margin-bottom: 1em;
             color: #333;
         }
 
@@ -61,7 +70,7 @@
 
         label {
             position: absolute;
-            top: 12px; /* Adjusted top position */
+            top: 0px; /* Adjusted top position */
             left: 15px;
             color: #aaa;
             transition: 0.2s ease all;
@@ -109,11 +118,83 @@
         p a:hover {
             text-decoration: underline;
         }
+
+        .copyright {
+            margin-top: 1.5em;
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .line {
+            margin: 1em 0;
+            border-top: 1px solid #ccc;
+        }
+
+        /* Adjustments for terms and conditions checkbox */
+        .terms-container {
+            display: flex;
+            align-items: center; /* Center vertically */
+            justify-content: center; /* Center horizontally */
+            margin-top: 1em; /* Add space above */
+            margin-bottom: 1.5em; /* Space below the checkbox */
+            font-size: 0.9em; /* Adjust font size */
+            color: #555; /* Adjust color for visibility */
+        }
+
+        .terms-checkbox {
+            margin-right: 8px; /* Space between checkbox and label */
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 500px;
+            border-radius: 8px; /* Rounded corners */
+            overflow-y: auto; /* Scroll if needed */
+            max-height: 400px; /* Maximum height of modal */
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-content{
+        max-height: 560px  !important;
+        
+        margin-top: 3% !important;
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h2>Login</h2>
+        <img src="/logo.png" alt="Logo" class="logo"> <!-- Add your logo path here -->
+        <h2>Welcome Back!</h2>
         <form id="loginForm">
             <div class="input-group">
                 <input type="email" id="email" name="email" required placeholder=" ">
@@ -123,9 +204,88 @@
                 <input type="password" id="password" name="password" required placeholder=" ">
                 <label for="password">Password:</label>
             </div>
+            
+            <!-- Terms and Conditions Checkbox -->
+            <div class="terms-container">
+                <input type="checkbox" id="terms" class="terms-checkbox" required>
+                <a for="terms">I agree to the &nbsp<a href="#" id="termsLink">terms and conditions</a>.</a>
+            </div>
+
             <button type="submit">Login</button>
         </form>
         <p>Don't have an account? <a href="register.html">Register here</a></p>
+        <div class="line"></div>
+        <p class="copyright">© 2024 Copyright Reserved</p>
+    </div>
+
+    <!-- Modal for Terms and Conditions -->
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Terms and Conditions</h2>
+            <div style="overflow-y: auto;">
+                <div class="container">
+                    <p>Welcome to <strong>BIRD MAILER</strong>, developed by <strong>Avenirya Solutions Pvt. Ltd.</strong> By using our mailing tool, you agree to the following Terms and Conditions. Please read them carefully before using the service.</p>
+                    
+                    <h2>1. Introduction</h2>
+                    <p>By accessing or using <strong>BIRD MAILER</strong>, you agree to comply with these terms. If you disagree with any part of these terms, you must not use our service. These terms apply to all visitors, users, and others who access the service.</p>
+                    
+                    <h2>2. Services Provided</h2>
+                    <p>BIRD MAILER is designed to streamline the process of sending multiple emails through multiple SMTP servers with a single click. Our goal is to provide an efficient and convenient tool for individuals and businesses to manage bulk emails.</p>
+                    <p>We are not responsible for configuring or providing SMTP servers. Users are required to set up and manage their own SMTP servers and are solely responsible for ensuring that the servers meet all applicable legal and security requirements.</p>
+            
+                    <h2>3. Account and Security</h2>
+                    <p>To use our service, you may be required to create an account with accurate and complete information. You are responsible for safeguarding your account credentials, including your password. Any activity that occurs under your account is your responsibility, and you agree to notify us immediately of any unauthorized use.</p>
+            
+                    <h2>4. User Responsibilities</h2>
+                    <p>When using BIRD MAILER, you agree to:</p>
+                    <ul>
+                        <li>Use the service in compliance with all applicable local, state, national, and international laws and regulations, including anti-spam laws (e.g., CAN-SPAM Act, GDPR).</li>
+                        <li>Avoid sending unsolicited, spam, or bulk emails without the recipient's consent.</li>
+                        <li>Ensure that your email lists are composed of users who have opted-in to receive communications from you.</li>
+                        <li>Provide accurate information when creating your account or sending emails, including valid "From," "Reply-To," and routing information.</li>
+                    </ul>
+            
+                    <h2>5. Prohibited Activities</h2>
+                    <p>When using BIRD MAILER, you agree not to:</p>
+                    <ul>
+                        <li>Use the service for any illegal, fraudulent, or harmful activities, including phishing, scamming, or distributing malware.</li>
+                        <li>Send any content that is defamatory, obscene, offensive, or violates any third-party rights, including intellectual property rights.</li>
+                        <li>Engage in any activity that could disrupt, disable, overburden, or impair the functionality of our service.</li>
+                        <li>Attempt to hack, gain unauthorized access to, or bypass any security measures of our service or associated servers.</li>
+                    </ul>
+            
+                    <h2>6. Email Content Compliance</h2>
+                    <p>You are solely responsible for the content of the emails you send using BIRD MAILER. This includes, but is not limited to:</p>
+                    <ul>
+                        <li>Ensuring that your emails comply with all relevant data protection and privacy regulations (e.g., GDPR).</li>
+                        <li>Providing accurate contact information within each email and including a clear mechanism for recipients to opt out of receiving future emails (e.g., an unsubscribe link).</li>
+                        <li>Avoiding the use of deceptive subject lines, misleading headers, or false information in any part of the email.</li>
+                    </ul>
+            
+                    <h2>7. Limitation of Liability</h2>
+                    <p>Our service is provided on an "as is" and "as available" basis without warranties of any kind, either express or implied. We do not guarantee that the service will be uninterrupted, secure, or error-free. Avenirya Solutions Pvt. Ltd. and its affiliates will not be liable for any direct, indirect, incidental, consequential, or punitive damages resulting from the use of our service, including but not limited to data loss, legal actions, or technical issues.</p>
+            
+                    <h2>8. Termination</h2>
+                    <p>We reserve the right to suspend or terminate your access to BIRD MAILER at any time, without prior notice, for any reason, including violation of these Terms and Conditions. In case of termination, all provisions of these terms which by their nature should survive termination will continue to apply, including, without limitation, ownership provisions, disclaimers, indemnity, and limitations of liability.</p>
+            
+                    <h2>9. Changes to Terms and Conditions</h2>
+                    <p>We reserve the right to modify these Terms and Conditions at any time. Any changes will be posted on this page with an updated revision date. By continuing to use the service after the changes have been made, you agree to be bound by the new terms.</p>
+            
+                    <h2>10. Governing Law</h2>
+                    <p>These Terms and Conditions shall be governed by and construed in accordance with the laws of INDIA.</p>
+            
+                    <h2>11. Contact Us</h2>
+                    <p>If you have any questions or concerns regarding these Terms and Conditions, please contact us:</p>
+                    <p>
+                        <strong>Avenirya Solutions Pvt. Ltd.</strong><br>
+                        Website: <a href="http://www.avenirya.com" target="_blank">www.avenirya.com</a><br>
+                        Email: admin@avenirya.com
+                    </p>
+                </div>
+            </div>
+            <p>By logging in, you agree to these terms.</p>
+        </div>
     </div>
 
     <script>
@@ -149,6 +309,28 @@
                 alert(message); // Show error message
             }
         });
+
+        // Modal functionality
+        const modal = document.getElementById("termsModal");
+        const btn = document.getElementById("termsLink");
+        const span = document.getElementById("closeModal");
+
+        // Open the modal when the terms link is clicked
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // Close the modal when the x is clicked
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Close the modal when clicking outside of the modal
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>
 </body>
 </html>
