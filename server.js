@@ -10,10 +10,15 @@ const WebSocket = require('ws');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const cors = require('cors');
+const socketIo = require('socket.io');
+const http = require('http');
+
 
 const app = express();
 const port = process.env.PORT || 3000;
 const mongoUri = process.env.MONGO_URI;
+const server = http.createServer(app);
+const io = socketIo(server);
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -45,6 +50,22 @@ const authenticateUser = (req, res, next) => {
         return res.redirect('/login'); // Redirect to login if token verification fails
     }
 };
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on('sendEmail', (to) => {
+        for (let i = 0; i < to.length; i++) {
+            // Simulate email sending
+            setTimeout(() => {
+                io.emit('emailStatus', `Email sent to: ${to[i]}`);
+            }, 1000 * i); // Delay for demonstration
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
 
 // Serve the main login page
 app.get('/', (req, res) => {
@@ -219,8 +240,9 @@ app.post('/send-email', authenticateUser, async (req, res) => {
 });
 
 // WebSocket setup
-const server = app.listen(port, '0.0.0.0', () => {
-    console.log(`Server is running on http://localhost:${port}`);
+// Start the server
+server.listen(port, '0.0.0.0', () => {
+    console.log(`Server running on port ${port}`);
 });
 
 const wss = new WebSocket.Server({ server });

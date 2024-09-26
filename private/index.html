@@ -156,7 +156,7 @@ body {
 
       <button id="sendButton" type="submit">Send Emails</button>
       <div id="countdown"></div>
-
+      <div id="statusDiv"></div>
       <div id="result"></div>
       
       <div>
@@ -172,6 +172,18 @@ body {
   <!-- Include PapaParse for CSV parsing -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
   <script src="app.js"></script>
+  <script>
+    const socket = io();
+
+    // Listen for email status messages
+    socket.on('emailStatus', (message) => {
+        const statusDiv = document.getElementById('statusDiv');
+        const newMessage = document.createElement('div');
+        newMessage.textContent = message;
+        statusDiv.appendChild(newMessage);
+    });
+    
+</script>
 
   <script>
     const sendButton = document.getElementById('sendButton');
@@ -191,6 +203,8 @@ body {
             console.log('Emails sent!'); // Replace this with actual email sending logic
             broadcast(`Email sent to: ${to[i]}`);
         });
+
+        
 
 
     // Logout functionality
