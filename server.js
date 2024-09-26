@@ -23,8 +23,6 @@ app.use(cors());
 app.use(express.static('public')); // Serve static files from the 'public' folder
 
 
-const path = require('path');
-
 // Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('build')); // Serve the build folder
