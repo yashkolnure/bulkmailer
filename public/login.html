@@ -1,200 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login Birdmailer.in</title>
+    <link rel="icon" href="/birdmailer.png" type="image/png"> <!-- Favicon link -->
+    <link rel="stylesheet" href="style.css">
     <style>
-        * {
-            box-sizing: border-box;
-        }
+       * {
+    box-sizing: border-box;
+}
 
-        .logo {
-            width: 80px; /* Adjust size as needed */
-            height: 80px; /* Adjust size as needed */
-            border-radius: 50%; /* Makes it circular */
-            margin-bottom: 1.5em;
-            border: 4px solid #007bff; /* Add a border with desired color and thickness */
-            object-fit: cover; /* Ensures the image fits well within the circle */
-        }
+body {
+    margin: auto;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow: auto;
+    background: linear-gradient(315deg, rgba(101, 0, 94, 1) 3%, rgba(60, 132, 206, 1) 38%, rgb(75, 182, 175) 68%, rgb(140, 13, 190) 98%);
+    animation: gradient 15s ease infinite;
+    background-size: 400% 400%;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #74ebd5, #9face6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+@keyframes gradient {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
 
-        .login-container {
-            background: white;
-            padding: 2.5em;
-            border-radius: 12px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            width: 400px; /* Increased width */
-            text-align: center;
-            transition: transform 0.3s;
-        }
+.login-container {
+    background: white;
+    padding: 2.5em;
+    border-radius: 12px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    text-align: center;
+    transition: transform 0.3s;
+}
 
-        .login-container:hover {
-            transform: translateY(-5px);
-        }
+.login-container:hover {
+    transform: translateY(-5px);
+}
 
-        h2 {
-            margin-bottom: 1em;
-            color: #333;
-        }
+.logo {
+    width: 80px; /* Adjust size as needed */
+    height: 80px; /* Adjust size as needed */
+    border-radius: 50%; /* Makes it circular */
+    margin-bottom: 1.5em;
+    border: 4px solid #007bff; /* Border color and thickness */
+    object-fit: cover; /* Ensures the image fits well within the circle */
+}
 
-        .input-group {
-            margin-bottom: 1.5em;
-            position: relative;
-        }
+h2 {
+    margin-top: 1rem;
+    margin-bottom: 0.5em;
+    color: #333;
+}
 
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px 10px; /* Adjusted padding */
-            border: 1px solid #ccc;
-            border-radius: 25px;
-            font-size: 1em;
-            transition: border-color 0.3s;
-            background: white; /* Ensure input background is white */
-        }
+.input-group {
+    margin-bottom: 1.5em;
+    position: relative;
+}
 
-        input:focus {
-            border-color: #007bff;
-            outline: none;
-        }
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 10px; /* Adjusted padding */
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+    background: white; /* Ensure input background is white */
+}
 
-        label {
-            position: absolute;
-            top: 0px; /* Adjusted top position */
-            left: 15px;
-            color: #aaa;
-            transition: 0.2s ease all;
-            pointer-events: none; /* Prevents clicking on the label */
-            font-size: 1em; /* Adjusted font size */
-            background: white; /* Set background to white */
-            padding: 0 5px; /* Add some horizontal padding */
-        }
+input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+label {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 15px;
+    transform: translateY(-50%); /* Center adjustment */
+    color: #aaa;
+    transition: 0.2s ease all;
+    pointer-events: none; /* Prevents clicking on the label */
+    font-size: 1em; /* Normal font size */
+    background: white; /* Set background to white */
+    padding: 0 5px; /* Horizontal padding */
+}
 
-        input:focus + label,
-        input:not(:placeholder-shown) + label {
-            top: -10px;
-            left: 10px;
-            font-size: 0.8em;
-            color: #007bff;
-            background: white; /* Keep background white on focus */
-        }
+input:focus + label,
+input:not(:placeholder-shown) + label {
+    top: 0; /* Align with the top of the input */
+    left: 10px; /* Adjust horizontal position */
+    font-size: 0.8em; /* Smaller font size */
+    color: #007bff; /* Change color on focus */
+    background: white; /* Keep background white */
+}
 
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            border: none;
-            color: white;
-            border-radius: 25px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    border-radius: 25px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
 
-        p {
-            margin-top: 1em;
-            font-size: 0.9em;
-        }
+button:hover {
+    background-color: #0056b3;
+}
 
-        p a {
-            color: #007bff;
-            text-decoration: none;
-        }
+p {
+    margin-top: 1em;
+    font-size: 0.9em;
+}
 
-        p a:hover {
-            text-decoration: underline;
-        }
+p a {
+    color: #007bff;
+    text-decoration: none;
+}
 
-        .copyright {
-            margin-top: 1.5em;
-            font-size: 0.8em;
-            color: #666;
-        }
+p a:hover {
+    text-decoration: underline;
+}
 
-        .line {
-            margin: 1em 0;
-            border-top: 1px solid #ccc;
-        }
+.copyright {
+    margin-top: 1.5em;
+    font-size: 0.8em;
+    color: #666;
+}
 
-        /* Adjustments for terms and conditions checkbox */
-        .terms-container {
-            display: flex;
-            align-items: center; /* Center vertically */
-            justify-content: center; /* Center horizontally */
-            margin-top: 1em; /* Add space above */
-            margin-bottom: 1.5em; /* Space below the checkbox */
-            font-size: 0.9em; /* Adjust font size */
-            color: #555; /* Adjust color for visibility */
-        }
+.copyrigh {
+    margin-top: 0.2em;
+    font-size: 0.8em;
+    color: #666;
+}
 
-        .terms-checkbox {
-            margin-right: 8px; /* Space between checkbox and label */
-        }
+.line {
+    margin: 1em 0;
+    border-top: 1px solid #ccc;
+}
 
-        /* Modal styles */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1000; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
+/* Adjustments for terms and conditions checkbox */
+.terms-container {
+    display: flex;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    margin-top: 1em; /* Space above */
+    margin-bottom: 1.5em; /* Space below the checkbox */
+    font-size: 0.9em; /* Adjust font size */
+    color: #555; /* Adjust color for visibility */
+}
 
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto; /* 15% from the top and centered */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; /* Could be more or less, depending on screen size */
-            max-width: 500px;
-            border-radius: 8px; /* Rounded corners */
-            overflow-y: auto; /* Scroll if needed */
-            max-height: 400px; /* Maximum height of modal */
-        }
+.terms-checkbox {
+    margin-right: 8px; /* Space between checkbox and label */
+}
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
 
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .modal-content{
-        max-height: 560px  !important;
-        
-        margin-top: 3% !important;
-        }
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 500px;
+    border-radius: 8px; /* Rounded corners */
+    overflow-y: auto; /* Scroll if needed */
+    max-height: 400px; /* Maximum height of modal */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-content {
+    max-height: 560px !important;
+    margin-top: 3% !important;
+}
+
     </style>
 </head>
 <body>
     <div class="login-container">
         <img src="/logo.png" alt="Logo" class="logo"> <!-- Add your logo path here -->
-        <h2>Welcome Back!</h2>
+        <h2>Login to Birdmailer</h2>
         <form id="loginForm">
             <div class="input-group">
                 <input type="email" id="email" name="email" required placeholder=" ">
@@ -216,6 +245,7 @@
         <p>Don't have an account? <a href="register.html">Register here</a></p>
         <div class="line"></div>
         <p class="copyright">© 2024 Copyright Reserved</p>
+        <p class="copyrigh">Product of <a href="https://www.avenirya.com/">Avenirya Solutions OPC Private Limited</a></p>
     </div>
 
     <!-- Modal for Terms and Conditions -->
@@ -225,20 +255,20 @@
             <h2>Terms and Conditions</h2>
             <div style="overflow-y: auto;">
                 <div class="container">
-                    <p>Welcome to <strong>BIRD MAILER</strong>, developed by <strong>Avenirya Solutions Pvt. Ltd.</strong> By using our mailing tool, you agree to the following Terms and Conditions. Please read them carefully before using the service.</p>
+                    <p>Welcome to <strong>Bird Mailer</strong>, developed by <strong>Avenirya Solutions OPC Pvt. Ltd.</strong> By using our mailing tool, you agree to the following Terms and Conditions. Please read them carefully before using the service.</p>
                     
                     <h2>1. Introduction</h2>
-                    <p>By accessing or using <strong>BIRD MAILER</strong>, you agree to comply with these terms. If you disagree with any part of these terms, you must not use our service. These terms apply to all visitors, users, and others who access the service.</p>
+                    <p>By accessing or using <strong>Bird Mailer</strong>, you agree to comply with these terms. If you disagree with any part of these terms, you must not use our service. These terms apply to all visitors, users, and others who access the service.</p>
                     
                     <h2>2. Services Provided</h2>
-                    <p>BIRD MAILER is designed to streamline the process of sending multiple emails through multiple SMTP servers with a single click. Our goal is to provide an efficient and convenient tool for individuals and businesses to manage bulk emails.</p>
+                    <p>Bird Mailer is designed to streamline the process of sending multiple emails through multiple SMTP servers with a single click. Our goal is to provide an efficient and convenient tool for individuals and businesses to manage bulk emails.</p>
                     <p>We are not responsible for configuring or providing SMTP servers. Users are required to set up and manage their own SMTP servers and are solely responsible for ensuring that the servers meet all applicable legal and security requirements.</p>
             
                     <h2>3. Account and Security</h2>
                     <p>To use our service, you may be required to create an account with accurate and complete information. You are responsible for safeguarding your account credentials, including your password. Any activity that occurs under your account is your responsibility, and you agree to notify us immediately of any unauthorized use.</p>
             
                     <h2>4. User Responsibilities</h2>
-                    <p>When using BIRD MAILER, you agree to:</p>
+                    <p>When using Bird Mailer, you agree to:</p>
                     <ul>
                         <li>Use the service in compliance with all applicable local, state, national, and international laws and regulations, including anti-spam laws (e.g., CAN-SPAM Act, GDPR).</li>
                         <li>Avoid sending unsolicited, spam, or bulk emails without the recipient's consent.</li>
@@ -247,7 +277,7 @@
                     </ul>
             
                     <h2>5. Prohibited Activities</h2>
-                    <p>When using BIRD MAILER, you agree not to:</p>
+                    <p>When using Bird Mailer, you agree not to:</p>
                     <ul>
                         <li>Use the service for any illegal, fraudulent, or harmful activities, including phishing, scamming, or distributing malware.</li>
                         <li>Send any content that is defamatory, obscene, offensive, or violates any third-party rights, including intellectual property rights.</li>
@@ -256,7 +286,7 @@
                     </ul>
             
                     <h2>6. Email Content Compliance</h2>
-                    <p>You are solely responsible for the content of the emails you send using BIRD MAILER. This includes, but is not limited to:</p>
+                    <p>You are solely responsible for the content of the emails you send using Bird Mailer. This includes, but is not limited to:</p>
                     <ul>
                         <li>Ensuring that your emails comply with all relevant data protection and privacy regulations (e.g., GDPR).</li>
                         <li>Providing accurate contact information within each email and including a clear mechanism for recipients to opt out of receiving future emails (e.g., an unsubscribe link).</li>
@@ -264,10 +294,10 @@
                     </ul>
             
                     <h2>7. Limitation of Liability</h2>
-                    <p>Our service is provided on an "as is" and "as available" basis without warranties of any kind, either express or implied. We do not guarantee that the service will be uninterrupted, secure, or error-free. Avenirya Solutions Pvt. Ltd. and its affiliates will not be liable for any direct, indirect, incidental, consequential, or punitive damages resulting from the use of our service, including but not limited to data loss, legal actions, or technical issues.</p>
+                    <p>Our service is provided on an "as is" and "as available" basis without warranties of any kind, either express or implied. We do not guarantee that the service will be uninterrupted, secure, or error-free. Avenirya Solutions OPC Pvt. Ltd. and its affiliates will not be liable for any direct, indirect, incidental, consequential, or punitive damages resulting from the use of our service, including but not limited to data loss, legal actions, or technical issues.</p>
             
                     <h2>8. Termination</h2>
-                    <p>We reserve the right to suspend or terminate your access to BIRD MAILER at any time, without prior notice, for any reason, including violation of these Terms and Conditions. In case of termination, all provisions of these terms which by their nature should survive termination will continue to apply, including, without limitation, ownership provisions, disclaimers, indemnity, and limitations of liability.</p>
+                    <p>We reserve the right to suspend or terminate your access to Bird Mailer at any time, without prior notice, for any reason, including violation of these Terms and Conditions. In case of termination, all provisions of these terms which by their nature should survive termination will continue to apply, including, without limitation, ownership provisions, disclaimers, indemnity, and limitations of liability.</p>
             
                     <h2>9. Changes to Terms and Conditions</h2>
                     <p>We reserve the right to modify these Terms and Conditions at any time. Any changes will be posted on this page with an updated revision date. By continuing to use the service after the changes have been made, you agree to be bound by the new terms.</p>
@@ -278,7 +308,7 @@
                     <h2>11. Contact Us</h2>
                     <p>If you have any questions or concerns regarding these Terms and Conditions, please contact us:</p>
                     <p>
-                        <strong>Avenirya Solutions Pvt. Ltd.</strong><br>
+                        <strong>Avenirya Solutions OPC Pvt. Ltd.</strong><br>
                         Website: <a href="http://www.avenirya.com" target="_blank">www.avenirya.com</a><br>
                         Email: admin@avenirya.com
                     </p>

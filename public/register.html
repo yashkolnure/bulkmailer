@@ -3,21 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Register Birdmailer.in</title>
+    <link rel="icon" href="/birdmailer.png" type="image/png"> <!-- Favicon link -->
+    <link rel="stylesheet" href="style.css">
     <style>
         * {
             box-sizing: border-box;
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #74ebd5, #9face6);
+            margin: auto;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow: auto;
+            background: linear-gradient(315deg, rgba(101,0,94,1) 3%, rgba(60,132,206,1) 38%, rgb(75, 182, 175) 68%, rgb(140, 13, 190) 98%);
+            animation: gradient 15s ease infinite;
+            background-size: 400% 400%;
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            padding: 20px;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 0%;
+            }
+            50% {
+                background-position: 100% 100%;
+            }
+            100% {
+                background-position: 0% 0%;
+            }
         }
 
         .register-container {
@@ -26,7 +44,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
             max-height: 90vh;
             overflow-y: auto;
             text-align: center;
@@ -63,6 +81,7 @@
             font-size: 1em;
             transition: border-color 0.3s;
             background: white;
+            margin: 0;
         }
 
         input:focus {
@@ -71,25 +90,27 @@
         }
 
         label {
-            position: absolute;
-            top: 50%;
-            left: 15px;
-            transform: translateY(-50%);
-            color: #aaa;
-            transition: 0.2s ease all;
-            pointer-events: none;
-            font-size: 1em;
-            background: white;
-            padding: 0 5px;
-        }
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 15px;
+    transform: translateY(-50%); /* Center adjustment */
+    color: #aaa;
+    transition: 0.2s ease all;
+    pointer-events: none; /* Prevents clicking on the label */
+    font-size: 1em; /* Normal font size */
+    background: white; /* Set background to white */
+    padding: 0 5px; /* Horizontal padding */
+}
 
-        input:focus + label,
-        input:not(:placeholder-shown) + label {
-            top: -15px;
-            left: 15px;
-            font-size: 0.8em;
-            color: #007bff;
-        }
+input:focus + label,
+input:not(:placeholder-shown) + label {
+    top: 5px; /* Adjust this value to move the label higher */
+    left: 10px; /* Adjust horizontal position */
+    font-size: 0.8em; /* Smaller font size */
+    color: #007bff; /* Change color on focus */
+    background: white; /* Keep background white */
+}
+
 
         button {
             width: 100%;
@@ -129,70 +150,33 @@
         h3 {
             margin-top: 1.5em;
             color: #333;
-            font-size: 1.5em;
+            font-size: 1.4em;
         }
+        h2 {
+    margin-top: 1rem;
+    margin-bottom: 0.5em;
+    color: #333;
+}
 
         .line {
             margin: 1em 0;
             border-top: 1px solid #ccc;
         }
 
-        .error-message {
-            color: red;
-            margin-top: 10px;
-            font-size: 0.9em;
-            display: none;
-        }
-
-        .terms-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 80%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-content h2 {
-            margin-bottom: 1em;
-        }
-
-        .modal-content p {
-            margin-bottom: 1em;
-            text-align: justify;
-        }
-
-        .modal-close {
-            margin-top: 1em;
-            text-align: right;
-        }
         .copyright {
-    margin-top: 1.5em;
-    font-size: 0.8em;
-    color: #666;
-}
+            margin-top: 1.5em;
+            font-size: 0.8em;
+            color: #666;
+        }
 
-        .modal-close button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 5px;
+        .copyrigh {
+            margin-top: 0.2em;
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        a {
+            color: #007bff; /* Change this to your desired color */
         }
     </style>
 </head>
@@ -215,7 +199,7 @@
             </div>
 
             <h3>SMTP Credentials</h3>
-            <!-- SMTP fields for multiple credentials -->
+            <div> <br></div>
             <div class="input-group">
                 <input type="email" id="smtpmail1" name="smtpmail1" required placeholder=" ">
                 <label for="smtpmail1">SMTP Email 1</label>
@@ -284,16 +268,13 @@
                 <label for="smtphost4">SMTP Host 4</label>
             </div>
 
-           
-
             <button type="submit" id="submitBtn">Register</button>
         </form>
         <p>Already have an account? <a href="login.html">Login here</a></p>
         <div class="line"></div>
         <p class="copyright">© 2024 Copyright Reserved</p>
+        <p class="copyrigh">Product of <a href="https://www.avenirya.com/">Avenirya Solutions OPC Private Limited</a></p>
     </div>
-
-    
 
     <script>
         // Show Terms and Conditions modal
@@ -301,12 +282,12 @@
         const termsModal = document.getElementById('termsModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
 
-        termsLink.addEventListener('click', (e) => {
+        termsLink?.addEventListener('click', (e) => {
             e.preventDefault();
             termsModal.style.display = 'flex'; // Show the modal
         });
 
-        closeModalBtn.addEventListener('click', () => {
+        closeModalBtn?.addEventListener('click', () => {
             termsModal.style.display = 'none'; // Hide the modal
         });
 
@@ -314,7 +295,7 @@
         document.getElementById('registerForm').addEventListener('submit', (e) => {
             const termsCheckbox = document.getElementById('termsCheckbox');
 
-            if (!termsCheckbox.checked) {
+            if (termsCheckbox && !termsCheckbox.checked) {
                 e.preventDefault();
                 alert('You must agree to the Terms and Conditions to proceed.');
             }

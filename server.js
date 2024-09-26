@@ -192,11 +192,23 @@ app.post('/send-email', authenticateUser, async (req, res) => {
                 from: `"${user.username}" <${smtpCredential.email}>`,
                 to: to[i], // Current recipient
                 subject: subject,
-                html: message,
+                html: `
+        <div>
+            ${message}
+            <br>
+            <p style="font-size: small; color: gray;">This email is sent with <a href="https://birdmailer.in/">Birdmailer.in</a>.</p>
+        </div>
+    `,
             };
 
             // Send email with retry logic
             await sendEmail(transporter, mailOptions);
+            // Broadcast success message
+          broadcast(`Email sent to: ${to[i]}`);
+
+          // Add a delay between each email
+          await new Promise(resolve => setTimeout(resolve, 80));
+      
         }
 
         res.status(200).json({ message: 'All emails sent successfully!' });
