@@ -186,6 +186,9 @@ body {
 </script>
 
   <script>
+     document.getElementById('sendButton').addEventListener('click', function() {
+      document.getElementById('statusDiv').innerText = 'Emails sending............';
+     });
     const sendButton = document.getElementById('sendButton');
         const countdownDisplay = document.getElementById('countdown');
         const emailForm = document.getElementById('emailForm');
