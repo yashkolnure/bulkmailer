@@ -22,37 +22,13 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.static('public')); // Serve static files from the 'public' folder
 
-
-// Serve static assets if in production
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('build')); // Serve the build folder
-
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
-    });
-}
-
-
 // MongoDB connection
-
 mongoose.connect(mongoUri)
     .then(() => {
         console.log('Connected to MongoDB');
         run(); // Call your run function to fetch data or perform other initializations
     })
     .catch(err => console.error('Failed to connect to MongoDB', err));
-
-async function run() {
-    const database = mongoose.connection.db; // Access the connected database
-    const collection = database.collection('your_collection_name'); // Replace with your collection name
-
-    try {
-        const data = await collection.find().toArray();
-        console.log(data);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-}
 
 // JWT Authentication Middleware
 const authenticateUser = (req, res, next) => {
@@ -70,13 +46,13 @@ const authenticateUser = (req, res, next) => {
     }
 };
 
-// Routes
+// Serve the main login page
 app.get('/', (req, res) => {
     const token = req.cookies.authToken;
     if (token) {
         try {
             jwt.verify(token, process.env.JWT_SECRET); // Check if the token is valid
-            return res.sendFile(path.join(__dirname, 'private', 'index.html')); // Serve index.html
+            return res.sendFile(path.join(__dirname, 'private', 'index.html')); // Serve your main HTML page
         } catch (err) {
             return res.sendFile(path.join(__dirname, 'public', 'login.html')); // Serve login.html on token failure
         }
@@ -150,37 +126,19 @@ app.get('/dashboard', authenticateUser, (req, res) => {
     res.send(`Welcome, ${req.user.email}! This is the dashboard.`); // Display user's email or other info
 });
 
-// WebSocket setup
-const server = app.listen(port, '0.0.0.0', () => {  // Change to '0.0.0.0'
-    console.log(`Server is running on http://localhost:${port}`);
-});
-
-const wss = new WebSocket.Server({ server });
-
-// Broadcast function to send messages to all connected clients
-const broadcast = (message) => {
-    wss.clients.forEach(client => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(message);
-        }
+// Email sending logic
+const createTransporter = ({ user, pass, host, port }) => {
+    return nodemailer.createTransport({
+        host: host,
+        port: port,
+        secure: port === '465', // true for 465, false for other ports
+        auth: {
+            user: user,
+            pass: pass,
+        },
     });
 };
 
-// Create SMTP transporter
-const createTransporter = ({ user, pass, host, port }) => {
-  return nodemailer.createTransport({
-      host: host, // Use server from credentials
-      port: port, // Use port from credentials
-      secure: port === '465', // true for 465, false for other ports
-      auth: {
-          user: user,
-          pass: pass,
-      },
-  });
-};
-
-
-// Function to send emails with retry logic
 const sendEmail = async (transporter, mailOptions, retries = 3) => {
     try {
         await transporter.sendMail(mailOptions);
@@ -201,59 +159,68 @@ const sendEmail = async (transporter, mailOptions, retries = 3) => {
 
 // POST route to send emails
 app.post('/send-email', authenticateUser, async (req, res) => {
-  const { to, subject, message } = req.body;
+    const { to, subject, message } = req.body;
 
-  // Validate email recipients
-  if (!to || !Array.isArray(to) || to.length === 0) {
-      return res.status(400).json({ message: 'No recipients defined' });
-  }
+    // Validate email recipients
+    if (!to || !Array.isArray(to) || to.length === 0) {
+        return res.status(400).json({ message: 'No recipients defined' });
+    }
 
-  try {
-      // Fetch user and their SMTP credentials
-      const user = await User.findById(req.user.id).populate('smtpCredentials');
-      if (!user || !user.smtpCredentials || user.smtpCredentials.length === 0) {
-          return res.status(400).json({ message: 'No SMTP credentials found for the user.' });
-      }
+    try {
+        // Fetch user and their SMTP credentials
+        const user = await User.findById(req.user.id).populate('smtpCredentials');
+        if (!user || !user.smtpCredentials || user.smtpCredentials.length === 0) {
+            return res.status(400).json({ message: 'No SMTP credentials found for the user.' });
+        }
 
-      const batchSize = 3; // Define how many emails each SMTP credential should handle
+        const batchSize = 3; // Define how many emails each SMTP credential should handle
 
-      for (let i = 0; i < to.length; i++) {
-          const smtpIndex = Math.floor(i / batchSize) % user.smtpCredentials.length; // Cycle through credentials
-          const smtpCredential = user.smtpCredentials[smtpIndex];
+        for (let i = 0; i < to.length; i++) {
+            const smtpIndex = Math.floor(i / batchSize) % user.smtpCredentials.length; // Cycle through credentials
+            const smtpCredential = user.smtpCredentials[smtpIndex];
 
-          // Create transporter with user-specific SMTP credentials
-          const transporter = createTransporter({
-              user: smtpCredential.email,
-              pass: smtpCredential.password,
-              host: smtpCredential.host,
-              port: smtpCredential.port,
-          });
+            // Create transporter with user-specific SMTP credentials
+            const transporter = createTransporter({
+                user: smtpCredential.email,
+                pass: smtpCredential.password,
+                host: smtpCredential.host,
+                port: smtpCredential.port,
+            });
 
-          // Email details
-          const mailOptions = {
-              from: `"${user.username}" <${smtpCredential.email}>`,
-              to: to[i], // Current recipient
-              subject: subject,
-              html: message,
-          };
+            // Email details
+            const mailOptions = {
+                from: `"${user.username}" <${smtpCredential.email}>`,
+                to: to[i], // Current recipient
+                subject: subject,
+                html: message,
+            };
 
-          // Send email with retry logic
-          await sendEmail(transporter, mailOptions);
+            // Send email with retry logic
+            await sendEmail(transporter, mailOptions);
+        }
 
-          // Broadcast success message
-          broadcast(`Email sent to: ${to[i]}`);
-
-          // Add a delay between each email
-          await new Promise(resolve => setTimeout(resolve, 500));
-      }
-
-      res.status(200).json({ message: 'All emails sent successfully!' });
-  } catch (error) {
-      console.error(`Error sending email: ${error.message}`);
-      res.status(500).json({ message: 'Error sending emails.', error: error.message });
-  }
+        res.status(200).json({ message: 'All emails sent successfully!' });
+    } catch (error) {
+        console.error(`Error sending email: ${error.message}`);
+        res.status(500).json({ message: 'Error sending emails.', error: error.message });
+    }
 });
 
+// WebSocket setup
+const server = app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
+
+const wss = new WebSocket.Server({ server });
+
+// Broadcast function to send messages to all connected clients
+const broadcast = (message) => {
+    wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(message);
+        }
+    });
+};
 
 // WebSocket example
 wss.on('connection', (ws) => {
@@ -263,3 +230,17 @@ wss.on('connection', (ws) => {
         broadcast(`Server: ${message}`); // Echo message back to all clients
     });
 });
+
+// Run function to perform initial actions
+async function run() {
+    const database = mongoose.connection.db; // Access the connected database
+    const collection = database.collection('your_collection_name'); // Replace with your collection name
+
+    try {
+        const data = await collection.find().toArray();
+        console.log(data);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
