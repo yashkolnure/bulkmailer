@@ -276,28 +276,62 @@ input:not(:placeholder-shown) + label {
         <p class="copyrigh">Product of <a href="https://www.avenirya.com/">Avenirya Solutions OPC Private Limited</a></p>
     </div>
 
+    
     <script>
-        // Show Terms and Conditions modal
-        const termsLink = document.getElementById('termsLink');
-        const termsModal = document.getElementById('termsModal');
-        const closeModalBtn = document.getElementById('closeModalBtn');
+        document.getElementById('registerForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent the form from submitting the default way
 
-        termsLink?.addEventListener('click', (e) => {
-            e.preventDefault();
-            termsModal.style.display = 'flex'; // Show the modal
-        });
+            const formData = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                smtpCredentials: [
+                    {
+                        email: document.getElementById('smtpmail1').value,
+                        password: document.getElementById('smtppass1').value,
+                        port: document.getElementById('smtpport1').value,
+                        host: document.getElementById('smtphost1').value,
+                    },
+                    {
+                        email: document.getElementById('smtpmail2').value,
+                        password: document.getElementById('smtppass2').value,
+                        port: document.getElementById('smtpport2').value,
+                        host: document.getElementById('smtphost2').value,
+                    },
+                    {
+                        email: document.getElementById('smtpmail3').value,
+                        password: document.getElementById('smtppass3').value,
+                        port: document.getElementById('smtpport3').value,
+                        host: document.getElementById('smtphost3').value,
+                    },
+                    {
+                        email: document.getElementById('smtpmail4').value,
+                        password: document.getElementById('smtppass4').value,
+                        port: document.getElementById('smtpport4').value,
+                        host: document.getElementById('smtphost4').value,
+                    },
+                ],
+            };
 
-        closeModalBtn?.addEventListener('click', () => {
-            termsModal.style.display = 'none'; // Hide the modal
-        });
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
 
-        // Prevent form submission until Terms and Conditions are checked
-        document.getElementById('registerForm').addEventListener('submit', (e) => {
-            const termsCheckbox = document.getElementById('termsCheckbox');
-
-            if (termsCheckbox && !termsCheckbox.checked) {
-                e.preventDefault();
-                alert('You must agree to the Terms and Conditions to proceed.');
+                if (response.ok) {
+                    alert('Registration successful!');
+                    window.location.href = '/login.html'; // Redirect to login page
+                } else {
+                    const errorText = await response.text();
+                    alert('Registration failed: ' + errorText);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Registration failed: ' + error.message);
             }
         });
     </script>

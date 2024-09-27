@@ -10,19 +10,15 @@ const WebSocket = require('ws');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const cors = require('cors');
-const socketIo = require('socket.io');
-const http = require('http');
-
 
 const app = express();
 const port = process.env.PORT || 3000;
 const mongoUri = process.env.MONGO_URI;
-const server = http.createServer(app);
-const io = socketIo(server);
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 app.use(express.static('public')); // Serve static files from the 'public' folder
@@ -50,22 +46,6 @@ const authenticateUser = (req, res, next) => {
         return res.redirect('/login'); // Redirect to login if token verification fails
     }
 };
-io.on('connection', (socket) => {
-    console.log('A user connected');
-
-    socket.on('sendEmail', (to) => {
-        for (let i = 0; i < to.length; i++) {
-            // Simulate email sending
-            setTimeout(() => {
-                io.emit('emailStatus', `Email sent to: ${to[i]}`);
-            }, 1000 * i); // Delay for demonstration
-        }
-    });
-
-    socket.on('disconnect', () => {
-        console.log('User disconnected');
-    });
-});
 
 // Serve the main login page
 app.get('/', (req, res) => {
@@ -213,6 +193,7 @@ app.post('/send-email', authenticateUser, async (req, res) => {
                 from: `"${user.username}" <${smtpCredential.email}>`,
                 to: to[i], // Current recipient
                 subject: subject,
+                replyTo: user.email,
                 html: `
         <div>
             ${message}
@@ -220,6 +201,7 @@ app.post('/send-email', authenticateUser, async (req, res) => {
             <p style="font-size: small; color: gray;">This email is sent with <a href="https://birdmailer.in/">Birdmailer.in</a>.</p>
         </div>
     `,
+    
             };
 
             // Send email with retry logic
@@ -240,9 +222,8 @@ app.post('/send-email', authenticateUser, async (req, res) => {
 });
 
 // WebSocket setup
-// Start the server
-server.listen(port, '0.0.0.0', () => {
-    console.log(`Server running on port ${port}`);
+const server = app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running on http://localhost:${port}`);
 });
 
 const wss = new WebSocket.Server({ server });
