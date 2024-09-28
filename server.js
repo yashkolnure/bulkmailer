@@ -58,7 +58,7 @@ app.get('/', (req, res) => {
             return res.sendFile(path.join(__dirname, 'public', 'login.html')); // Serve login.html on token failure
         }
     } else {
-        return res.sendFile(path.join(__dirname, 'public', 'index1.html')); // Serve login.html if no token exists
+        return res.sendFile(path.join(__dirname, 'public', 'Index1.html')); // Serve login.html if no token exists
     }
 });
 
