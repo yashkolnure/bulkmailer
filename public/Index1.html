@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <title>Bird Mailer | Bulk Emailing Made Simple</title>
+    <link rel="icon" href="/birdmailer.png" type="image/png"> <!-- Favicon link -->
+  </head>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+:root {
+  --primary-color: #111317;
+  --primary-color-light: #1f2125;
+  --primary-color-extra-light: #35373b;
+  --secondary-color: #f9ac54;
+  --secondary-color-dark: #d79447;
+  --text-light: #d1d5db;
+  --white: #ffffff;
+  --max-width: 1200px;
+}
+
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.section__container {
+  max-width: var(--max-width);
+  margin: auto;
+  padding: 4rem 1rem;
+}
+
+.section__header {
+  margin-bottom: 1rem;
+  font-size: 2.25rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--white);
+}
+
+.section__subheader {
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  color: var(--text-light);
+}
+
+.btn {
+  padding: 1rem 2rem;
+  outline: none;
+  border: none;
+  font-size: 1rem;
+  color: var(--white);
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btnn {
+  padding: 1rem 2rem;
+  outline: none;
+  border: none;
+  font-size: 1.6rem;
+  color: var(--white);
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background-color: var(--secondary-color-dark);
+}
+
+img {
+  width: 100%;
+  display: flex;
+}
+
+a {
+  text-decoration: none;
+  color: var(--white);
+}
+
+.bg__blur {
+  position: absolute;
+  box-shadow: 0 0 1000px 50px var(--secondary-color);
+  z-index: -1;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: var(--primary-color);
+}
+
+nav {
+  max-width: var(--max-width);
+  margin: auto;
+  padding: 2rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.nav__logo {
+  max-width: 120px;
+  border-radius: 10px;
+  
+}
+
+.nav__links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.link a {
+  position: relative;
+  padding-bottom: 0.75rem;
+  color: var(--white);
+}
+
+.link a::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  width: 0;
+  left: 0;
+  bottom: 0;
+  background-color: var(--secondary-color);
+  transition: 0.3s;
+}
+
+.link a:hover::after {
+  width: 50%;
+}
+
+.header__container {
+  position: relative;
+  padding-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  gap: 2rem;
+}
+
+.header__container::before {
+  content: "BIRDMAILER";
+  position: absolute;
+  bottom: 1rem;
+  right: 10rem;
+  font-size: 9rem;
+  font-weight: 600;
+  line-height: 7rem;
+  color: var(--white);
+  opacity: 0.05;
+  z-index: -1;
+}
+
+.header__blur {
+  bottom: 5rem;
+  right: 0;
+}
+
+.header__content h4 {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--secondary-color);
+}
+
+.header__content h1 {
+  margin-bottom: 1rem;
+  font-size: 5rem;
+  font-weight: 700;
+  line-height: 6rem;
+  color: var(--white);
+}
+
+.header__content h1 span {
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px var(--white);
+}
+
+.header__content p {
+  margin-bottom: 2rem;
+  color: var(--text-light);
+}
+
+.header__image {
+  position: relative;
+}
+
+.header__image::before {
+  content: "o";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 40rem;
+  font-weight: 400;
+  line-height: 20rem;
+  color: var(--secondary-color);
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.header__image img {
+  max-width: 460px;
+  margin: auto;
+}
+
+.explore__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.explore__nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.explore__nav span {
+  padding: 0 6px;
+  font-size: 1.5rem;
+  color: var(--white);
+  border: 2px solid var(--white);
+  border-radius: 100%;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.explore__nav span:hover {
+  color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.explore__grid {
+  margin-top: 4rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.explore__card {
+  padding: 1rem;
+  background-color: var(--primary-color-light);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+.explore__card:hover {
+  background-color: var(--primary-color-extra-light);
+  border-color: var(--secondary-color);
+}
+
+.explore__card span {
+  display: inline-block;
+  padding: 2px 9px;
+  margin-bottom: 1rem;
+  font-size: 1.75rem;
+  color: var(--white);
+  background-color: var(--secondary-color-dark);
+  border-radius: 5px;
+}
+
+.explore__card h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.explore__card p {
+  margin-bottom: 1rem;
+  color: var(--text-light);
+}
+
+.explore__card a {
+  color: var(--white);
+  transition: 0.3s;
+}
+
+.explore__card a:hover {
+  color: var(--secondary-color);
+}
+
+.class__container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.class__image {
+  position: relative;
+}
+
+.class__image .class__img-1 {
+  position: absolute;
+  right: 0;
+  top: 0;
+  max-width: 500px;
+  border-radius: 10px;
+}
+
+.class__image .class__img-2 {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  max-width: 300px;
+  border-radius: 10px;
+}
+
+.class__content {
+  padding: 2rem 0;
+}
+
+.class__content .section__header {
+  text-align: left;
+  max-width: 400px;
+}
+
+.class__content p {
+  margin-bottom: 4rem;
+  color: var(--text-light);
+}
+
+.join__image {
+  margin-top: 4rem;
+  position: relative;
+}
+
+.join__image img {
+  border-radius: 10px;
+}
+
+.join__grid {
+  position: absolute;
+  bottom: -5rem;
+  width: calc(100% - 4rem);
+  padding: 2rem;
+  margin: 0 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  background-color: var(--primary-color-light);
+  border-radius: 10px;
+}
+
+.join__card {
+  flex: 1 1 250px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.join__card span {
+  padding: 5px 12px;
+  font-size: 1.75rem;
+  color: var(--white);
+  background-color: var(--secondary-color-dark);
+  border-radius: 5px;
+}
+
+.join__card h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--white);
+}
+
+.join__card p {
+  color: var(--text-light);
+}
+
+.price__grid {
+  margin-top: 4rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.price__card {
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--primary-color-light);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+.price__card:hover {
+  background-color: var(--primary-color-extra-light);
+  border-color: var(--secondary-color);
+}
+
+.price__card__content {
+  flex: 1;
+  margin-bottom: 2rem;
+}
+
+.price__card h4 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--white);
+}
+
+.price__card h3 {
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--white);
+  border-bottom: 2px solid var(--white);
+}
+
+.price__card p {
+  margin-bottom: 0.75rem;
+  color: var(--white);
+}
+
+.price__card p i {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+  color: var(--secondary-color);
+}
+
+.price__btn {
+  color: var(--secondary-color);
+  background-color: transparent;
+  border: 2px solid var(--secondary-color);
+}
+
+.price__btn:hover {
+  color: var(--white);
+  background-color: var(--secondary-color);
+}
+
+.review {
+  background-color: var(--primary-color-light);
+}
+
+.review__container {
+  display: flex;
+  gap: 2rem;
+}
+
+.review__container > span {
+  font-size: 6rem;
+  color: var(--secondary-color);
+  opacity: 0.5;
+}
+
+.review__content {
+  flex: 1;
+}
+
+.review__content h4 {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.review__content p {
+  max-width: 800px;
+  margin-bottom: 2rem;
+  color: var(--text-light);
+}
+
+.review__rating span {
+  font-size: 1.5rem;
+  color: var(--secondary-color);
+}
+
+.review__footer {
+  margin-top: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.review__member {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.review__member img {
+  max-width: 60px;
+  border-radius: 100%;
+}
+
+.review__member__details h4 {
+  margin-bottom: 0;
+}
+
+.review__nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.review__nav span {
+  font-size: 2rem;
+  color: var(--secondary-color);
+  cursor: pointer;
+}
+
+.footer__container {
+  position: relative;
+  display: grid;
+  grid-template-columns: 450px repeat(3, 1fr);
+  gap: 2rem;
+}
+
+
+
+
+
+.footer__logo {
+  max-width: 150px;
+  margin-bottom: 2rem;
+}
+
+.footer__col p {
+  margin-bottom: 2rem;
+  color: var(--text-light);
+}
+
+.footer__socials {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer__socials a {
+  padding: 5px 10px;
+  font-size: 1.25rem;
+  color: var(--secondary-color);
+  border: 1px solid var(--secondary-color);
+  border-radius: 100%;
+  transition: 0.3s;
+}
+
+.footer__socials a:hover {
+  color: var(--white);
+  background-color: var(--secondary-color);
+}
+
+.footer__col h4 {
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--white);
+}
+
+.footer__col > a {
+  display: block;
+  margin-bottom: 1rem;
+  color: var(--text-light);
+  transition: 0.3s;
+}
+
+.footer__col > a:hover {
+  color: var(--secondary-color);
+}
+
+.footer__bar {
+  max-width: var(--max-width);
+  margin: auto;
+  padding: 1rem;
+  font-size: 0.8rem;
+  color: var(--white);
+}
+
+@media (width < 900px) {
+  .nav__links {
+    display: none;
+  }
+
+  .header__container {
+    grid-template-columns: repeat(2, 2fr);
+  }
+
+  .header__image {
+    grid-area: 1/1/2/2;
+  }
+
+  .explore__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .class__container {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .class__image {
+    min-height: 500px;
+  }
+
+  .price__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .review__container {
+    gap: 2rem;
+  }
+
+  .footer__container {
+    grid-template-columns: 1fr 200px;
+  }
+}
+
+@media (width < 600px) {
+  .explore__header {
+    flex-direction: column;
+  }
+
+  .explore__grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .join__container {
+    margin-bottom: 15rem;
+  }
+
+  .join__grid {
+    width: 100%;
+    margin: 0;
+    bottom: -20rem;
+  }
+
+  .price__grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .review__container {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .review__footer {
+    flex-direction: column;
+  }
+
+  .footer__container {
+    grid-template-columns: 1fr 150px;
+  }
+  .section__container howto__container{
+    height: 100% !important;
+  }
+
+  .footer__bar {
+    text-align: center;
+  }
+}/* Contact Form Section */
+.contact__container {
+  background-color: rgba(255, 255, 255, 0.1); /* Transparent background */
+  padding: 4rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.contact__container h2.section__header {
+  color: #e0e0e0; /* Dark, readable heading */
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+}
+
+.contact__container p.section__subheader {
+  color: #666;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.contact__container form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.input__group {
+  margin-bottom: 1.5rem;
+}
+
+.input__field {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.6); /* Lighter transparent border */
+  background-color: rgba(255, 255, 255, 0.2); /* Slight transparency for fields */
+  color: #eee; /* Text color */
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  box-shadow: none;
+}
+
+.input__field:focus {
+  border-color: #007bff; /* Matches primary button color */
+}
+
+textarea.input__field {
+  resize: none;
+  height: auto;
+}
+
+/* Submit Button */
+.btn__primary {
+  background-color: #007bff; /* Primary brand color */
+  color: #fff;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn__primary:hover {
+  background-color: #0056b3; /* Slightly darker on hover */
+}
+
+/* For small screens */
+@media (max-width: 768px) {
+  .contact__container {
+    padding: 2rem 1rem;
+  }
+
+  .contact__container h2.section__header {
+    font-size: 1.8rem;
+  }
+
+  .contact__container p.section__subheader {
+    font-size: 1rem;
+  }
+}
+
+
+   .howto__video{
+    max-width: 100%;
+    margin-top:1rem;
+    height: 100% !important;
+   }
+   /* Responsive styles */
+@media (max-width: 1200px) {
+    .explore__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .class__container {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .header__container {
+        grid-template-columns: 1fr;
+    }
+    .header__content h1 {
+        font-size: 4rem;
+        line-height: 5rem;
+    }
+    .header__image img {
+        max-width: 350px;
+        display: none;
+    }
+    .explore__grid {
+        grid-template-columns: repeat(1, 2fr);
+    }
+    .class__container {
+        grid-template-columns: 1fr;
+    }
+    .join__grid {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 600px) {
+    .section__header {
+        font-size: 1.75rem;
+    }
+    .header__content h1 {
+        font-size: 3rem;
+        line-height: 4rem;
+    }
+    .explore__nav span {
+        font-size: 1.25rem;
+    }
+    .explore__card h4 {
+        font-size: 1rem;
+    }
+    .join__card span {
+        font-size: 1.5rem;
+    }
+}
+
+/* Logo */
+.nav__logo {
+    max-width: 80px; /* Adjust logo size */
+    border-radius: 10px; /* Optional: Adds rounded corners */
+}
+
+/* Buttons */
+.btn {
+    padding: 0.8rem 1.5rem; /* Adjust padding for smaller buttons */
+    font-size: 0.9rem; /* Adjust font size for smaller buttons */
+}
+
+/* Banner Image */
+.banner-image {
+    width: 100%; /* Makes the image responsive */
+    margin-top: 2rem; /* Space between banner content and image */
+    display: block; /* Ensures the image is treated as a block element */
+}
+
+/* Optional: Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .nav__logo {
+        max-width: 60px; /* Smaller logo on smaller screens */
+    }
+
+  
+
+    .banner-image {
+        margin-top: 1rem; /* Less space on smaller screens */
+    }
+}
+
+
+
+  </style>
+  <body>
+    <nav>
+      <div class="nav__logo">
+        <a href="#"><img src="/LOGO.png" alt="Bird Mailer logo" class="nav__logo" /></a>
+      </div>
+      <ul class="nav__links">
+        <li class="link"><a href="#">Home</a></li>
+        <li class="link"><a href="#features">Features</a></li>
+        <li class="link"><a href="#pricing">Pricing</a></li>
+        <li class="link"><a href="#contact">Contact</a></li>
+      </ul>
+      <button class="btn"><a href="/login.html">Login/Signup</a></button>
+    </nav>
+
+    <header class="section__container header__container">
+
+      <div class="header__content">
+        <span class="bg__blur"></span>
+        <span class="bg__blur header__blur"></span>
+        <h4>THE ULTIMATE BULK EMAIL SOLUTION</h4>
+        <h1><span>Send Bulk</span> Emails in One Click</h1>
+        <p>
+          Bird Mailer makes it simple to send bulk emails with just one click. Automate your email campaigns, reach your audience efficiently, and experience seamless email management like never before.
+        </p>
+        <button class="btnn"><a href="/register.html">SignUp</a></button>
+      </div>
+      <div class="header__image">
+        <img src="header_birdmailer.png" alt="Bird Mailer header image" />
+      </div>
+    </header>
+
+    <section class="section__container explore__container" id="features">
+      <div class="explore__header">
+        <h2 class="section__header">OUR FEATURES</h2>
+        
+         
+        </div>
+      </div>
+      <div class="explore__grid">
+        <div class="explore__card">
+          <span><i class="ri-mail-send-line"></i></span>
+          <h4>Bulk Emailing</h4>
+          <p>
+            Easily send bulk emails to your entire mailing list with just one click.
+          </p>
+        </div>
+        <div class="explore__card">
+          <span><i class="ri-server-fill"></i></span>
+          <h4>Multiple SMTP Connections</h4>
+          <p>
+            Connect with multiple different SMTP servers for smooth email delivery.
+          </p>
+        </div>
+        <div class="explore__card">
+          <span><i class="ri-code-box-line"></i></span>
+          <h4>HTML Message Support</h4>
+          <p>
+            Customize your emails with full HTML message support for enhanced designs.
+          </p>
+        </div>
+        <div class="explore__card">
+          <span><i class="ri-shield-keyhole-fill"></i></span>
+          <h4>Secure Integration</h4>
+          <p>
+            Easy and secure integration with your current systems for hassle-free setup.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW TO USE SECTION -->
+    <section class="section__container howto__container">
+      <h2 class="section__header">How to Use Bird Mailer</h2>
+      <p class="section__subheader">
+        Watch this tutorial to learn how to set up and use Bird Mailer for your bulk email campaigns.
+      </p>
+      <div class="howto__video">
+        <!-- Embed YouTube video -->
+        <iframe
+        width="100%"
+        height="500px"
+        src="https://www.youtube.com/embed/BTB4YHe" 
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+      
+      </div>
+    </section>
+
+    
+    <!-- END OF HOW TO USE SECTION -->
+
+    <section class="section__container price__container" id="pricing">
+      <h2 class="section__header">OUR PRICING PLAN</h2>
+      <p class="section__subheader">
+        Our pricing plans are designed to give you flexibility and power for your email campaigns.
+      </p>
+      <div class="price__grid">
+        <div class="price__card">
+          <div class="price__card__content">
+            <h4>Free Plan</h4>
+            <h3>₹0.00</h3>
+            <p><i class="ri-checkbox-circle-line"></i> 4 SMTP connections</p>
+            <p><i class="ri-checkbox-circle-line"></i> Up to 2,000 mails per day</p>
+            <p><i class="ri-checkbox-circle-line"></i> Easy integration</p>
+            <p><i class="ri-checkbox-circle-line"></i> HTML message support</p>
+
+          </div>
+          <button class="btn price__btn"><a href="register.html">Join Now</a></button>
+        </div>
+        <div class="price__card">
+          <div class="price__card__content">
+            <h4>Pro Plan</h4>
+            <h3 style="font-size: 2em; color: #eee; margin: 0;">₹699.00 <span style="font-size: 0.5em; vertical-align: super;">/ month<BR></span>
+            </h3>
+            
+            <p><i class="ri-checkbox-circle-lin"></i> </p>
+            <p><i class="ri-checkbox-circle-line"></i> 20 SMTP connections</p>
+            <p><i class="ri-checkbox-circle-line"></i> Up to 10,000 mails per day</p>
+            <p><i class="ri-checkbox-circle-line"></i> Priority email delivery</p>
+            <p><i class="ri-checkbox-circle-line"></i> HTML and plain text support</p>
+            <p><i class="ri-checkbox-circle-line"></i> Contact Us for Pro Plans</p>
+          </div>
+          <button class="btn price__btn"><a href="#contact">Join Now</a></button>
+        </div>
+        <div class="price__card">
+          <div class="price__card__content">
+            <h4>Enterprise Plan</h4>
+            <h3 style="font-size: 2em; color: #eee; margin: 0;">₹1,299.00 <span style="font-size: 0.5em; vertical-align: super;">/ month</span></h3>
+            <p><i class="ri-checkbox-circle-lin"></i> </p>
+            <p><i class="ri-checkbox-circle-line"></i> Unlimited SMTP connections</p>
+            <p><i class="ri-checkbox-circle-line"></i> Up to 30,000 mails per day</p>
+            <p><i class="ri-checkbox-circle-line"></i> Advanced analytics</p>
+            <p><i class="ri-checkbox-circle-line"></i> Premium support</p>
+            <p><i class="ri-checkbox-circle-line"></i> Contact Us for Pro Plans</p>
+          </div>
+          <button class="btn price__btn"><a href="#contact">Join Now</a></button>
+        </div>
+      </div>
+    </section>
+    <section class="section__container contact__container" id="contact">
+        <h2 class="section__header">Get in Touch</h2>
+        <p class="section__subheader">
+          We'd love to hear from you! Whether you have a question about Bird Mailer, a request, or anything else, our team is ready to answer all your queries.
+        </p>
+        <form id="contactForm" action="/send-email-admin" method="POST">
+          <div class="input__group">
+            <input
+              type="text"
+              name="name"
+              placeholder="Your Name"
+              required
+              class="input__field"
+            />
+          </div>
+          <div class="input__group">
+            <input
+              type="email"
+              name="email"
+              placeholder="Your Email"
+              required
+              class="input__field"
+            />
+          </div>
+          <div class="input__group">
+            <textarea
+              name="message"
+              placeholder="Your Message"
+              rows="5"
+              required
+              class="input__field"
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn__primary">Send Message</button>
+        </form>
+    </section>
+    
+      
+
+    <footer class="section__container footer__container">
+      <span class="bg__blur"></span>
+      <span class="bg__blur footer__blur"></span>
+      <div class="footer__col">
+        <div class="footer__logo"><img src="logo.png" alt="Bird Mailer logo" class="nav__logo"/></div>
+        <p>
+          Take control of your email campaigns with Bird Mailer. Get started today and experience the power of efficient email marketing.
+        </p>
+        <div class="footer__socials">
+          <a href="#"><i class="ri-facebook-fill"></i></a>
+          <a href="#"><i class="ri-instagram-line"></i></a>
+          <a href="#"><i class="ri-twitter-fill"></i></a>
+        </div>
+      </div>
+      <div class="footer__col">
+        
+        
+    </footer>
+    <div class="footer__bar">
+      Copyright © 2024 Bird Mailer. All rights reserved.
+    </div>
+  </body>
+</html>

@@ -58,7 +58,7 @@ app.get('/', (req, res) => {
             return res.sendFile(path.join(__dirname, 'public', 'login.html')); // Serve login.html on token failure
         }
     } else {
-        return res.sendFile(path.join(__dirname, 'public', 'login.html')); // Serve login.html if no token exists
+        return res.sendFile(path.join(__dirname, 'public', 'index1.html')); // Serve login.html if no token exists
     }
 });
 
@@ -119,7 +119,7 @@ app.post('/login', async (req, res) => {
 // Logout route
 app.get('/logout', (req, res) => {
     res.clearCookie('authToken'); // Remove the auth token from cookies
-    res.redirect('/login'); // Redirect to login page after logout
+    res.redirect('/index1.html'); // Redirect to main page after logout
 });
 
 // Dashboard route (protected)
@@ -157,6 +157,37 @@ const sendEmail = async (transporter, mailOptions, retries = 3) => {
         }
     }
 };
+const mailpassadmin = process.env.MAIL_PASS_ADMIN;
+
+// Endpoint to handle form submission
+app.post('/send-email-admin', async (req, res) => {
+    const { name, email, message } = req.body;
+
+    try {
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.hostinger.com', // Your SMTP server details
+            port: 465,
+            secure: true, // true for port 465
+            auth: {
+                user: 'marketing1@avenirya.com', // Your authenticated email
+                pass: mailpassadmin, // Password from environment variable
+            },
+        });
+
+        await transporter.sendMail({
+            from: '"Bird Mailer" <marketing1@avenirya.com>', // Use the authenticated email
+            to: 'admin@avenirya.com, yashkolnure58@gmail.com', // List of receivers
+            subject: 'New Contact Form Submission',
+            text: `You have a new message from ${name} (${email}): ${message}`,
+            html: `<p>You have a new message from <strong>${name}</strong> (${email}):</p><p>${message}</p>`,
+        });
+
+        res.status(200).send('Message sent successfully!');
+    } catch (error) {
+        console.error('Error sending email:', error); // Log the error message
+        res.status(500).send('Error sending email: ' + error.message); // Send the error message
+    }
+});
 
 // POST route to send emails
 app.post('/send-email', authenticateUser, async (req, res) => {
