@@ -16,8 +16,8 @@ const port = process.env.PORT || 3000;
 const mongoUri = process.env.MONGO_URI;
 
 // Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '100mb' })); // Adjust the limit based on your needs
+app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
@@ -140,7 +140,7 @@ const createTransporter = ({ user, pass, host, port }) => {
     });
 };
 
-const sendEmail = async (transporter, mailOptions, retries = 3) => {
+const sendEmail = async (transporter, mailOptions, retries = 1) => {
     try {
         await transporter.sendMail(mailOptions);
         console.log(`Email sent to: ${mailOptions.to}`);
@@ -190,6 +190,7 @@ app.post('/send-email-admin', async (req, res) => {
 });
 
 // POST route to send emails
+// POST route to send emails
 app.post('/send-email', authenticateUser, async (req, res) => {
     const { to, subject, message } = req.body;
 
@@ -199,19 +200,23 @@ app.post('/send-email', authenticateUser, async (req, res) => {
     }
 
     try {
-        // Fetch user and their SMTP credentials
+        // Fetch user and their SMTP credentials from the database
         const user = await User.findById(req.user.id).populate('smtpCredentials');
         if (!user || !user.smtpCredentials || user.smtpCredentials.length === 0) {
             return res.status(400).json({ message: 'No SMTP credentials found for the user.' });
         }
 
-        const batchSize = 3; // Define how many emails each SMTP credential should handle
+        const maxRetries = 1; // Maximum retries for a failed email
+        const smtpCount = user.smtpCredentials.length; // Get total number of SMTP servers
 
-        for (let i = 0; i < to.length; i++) {
-            const smtpIndex = Math.floor(i / batchSize) % user.smtpCredentials.length; // Cycle through credentials
-            const smtpCredential = user.smtpCredentials[smtpIndex];
+        if (smtpCount === 0) {
+            return res.status(400).json({ message: 'No SMTP servers configured.' });
+        }
 
-            // Create transporter with user-specific SMTP credentials
+        let smtpIndex = 0; // Index to cycle through SMTP servers
+
+        // Function to send email with retries
+        const sendMailWithRetries = async (recipient, smtpCredential) => {
             const transporter = createTransporter({
                 user: smtpCredential.email,
                 pass: smtpCredential.password,
@@ -219,38 +224,70 @@ app.post('/send-email', authenticateUser, async (req, res) => {
                 port: smtpCredential.port,
             });
 
-            // Email details
             const mailOptions = {
                 from: `"${user.username}" <${smtpCredential.email}>`,
-                to: to[i], // Current recipient
+                to: recipient,
                 subject: subject,
                 replyTo: user.email,
                 html: `
-        <div>
-            ${message}
-            <br>
-            <p style="font-size: small; color: gray;">This email is sent with <a href="https://birdmailer.in/">Birdmailer.in</a>.</p>
-        </div>
-    `,
-    
+                    <div>
+                        ${message}
+                        <br>
+                        <p style="font-size: small; color: gray;">This email is sent with <a href="https://birdmailer.in/">Birdmailer.in</a>.</p>
+                    </div>
+                `,
             };
 
-            // Send email with retry logic
-            await sendEmail(transporter, mailOptions);
-            // Broadcast success message
-          broadcast(`Email sent to: ${to[i]}`);
+            let retries = 0;
+            let emailSent = false;
 
-          // Add a delay between each email
-          await new Promise(resolve => setTimeout(resolve, 80));
-      
+            while (retries < maxRetries && !emailSent) {
+                try {
+                    await sendEmail(transporter, mailOptions);
+                    broadcast(`Email sent to: ${recipient}`);
+                    emailSent = true;
+                } catch (error) {
+                    retries++;
+                    console.error(`Error sending email to ${recipient}: ${error.message}`);
+                    broadcast(`Error sending email to ${recipient}: ${error.message}. Retrying... (${retries}/${maxRetries})`);
+                }
+            }
+
+            if (!emailSent) {
+                console.error(`Failed to send email to ${recipient} after ${maxRetries} attempts. Skipping...`);
+                broadcast(`Failed to send email to ${recipient} after ${maxRetries} attempts. Skipping...`);
+            }
+        };
+
+        // Parallelize email sending using a concurrency limit
+        const concurrencyLimit = 5; // Adjust this based on your server capabilities
+        const emailPromises = [];
+
+        for (let i = 0; i < to.length; i++) {
+            const smtpCredential = user.smtpCredentials[smtpIndex]; // Cycle through SMTP credentials
+            emailPromises.push(sendMailWithRetries(to[i], smtpCredential));
+
+            smtpIndex = (smtpIndex + 1) % smtpCount; // Rotate SMTP servers
+
+            // Once we reach the concurrency limit, wait for them to resolve before sending more
+            if (emailPromises.length === concurrencyLimit) {
+                await Promise.all(emailPromises); // Wait for the batch to complete
+                emailPromises.length = 0; // Reset the batch
+            }
+        }
+
+        // Send remaining emails
+        if (emailPromises.length > 0) {
+            await Promise.all(emailPromises);
         }
 
         res.status(200).json({ message: 'All emails sent successfully!' });
     } catch (error) {
-        console.error(`Error sending email: ${error.message}`);
+        console.error(`Error sending emails: ${error.message}`);
         res.status(500).json({ message: 'Error sending emails.', error: error.message });
     }
 });
+
 
 // WebSocket setup
 const server = app.listen(port, '0.0.0.0', () => {
