@@ -35,7 +35,7 @@ mongoose.connect(mongoUri)
 const authenticateUser = (req, res, next) => {
     const token = req.cookies.authToken; // Check for the auth token in cookies
     if (!token) {
-        return res.redirect('/login'); // Redirect to login if no token is found
+        return res.redirect('/Index1.html'); // Redirect to login if no token is found
     }
 
     try {
@@ -43,9 +43,10 @@ const authenticateUser = (req, res, next) => {
         req.user = decoded; // Attach user info to the request object
         next(); // Proceed to the next middleware
     } catch (err) {
-        return res.redirect('/login'); // Redirect to login if token verification fails
+        return res.redirect('/Index1.html'); // Redirect to login if token verification fails
     }
 };
+
 
 // Serve the main login page
 app.get('/', (req, res) => {
@@ -326,4 +327,3 @@ async function run() {
         console.error('Error fetching data:', error);
     }
 }
-
