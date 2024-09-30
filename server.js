@@ -56,7 +56,7 @@ app.get('/', (req, res) => {
             jwt.verify(token, process.env.JWT_SECRET); // Check if the token is valid
             return res.sendFile(path.join(__dirname, 'private', 'index.html')); // Serve your main HTML page
         } catch (err) {
-            return res.sendFile(path.join(__dirname, 'public', 'login.html')); // Serve login.html on token failure
+            return res.sendFile(path.join(__dirname, 'public', 'Index1.html')); // Serve login.html on token failure
         }
     } else {
         return res.sendFile(path.join(__dirname, 'public', 'Index1.html')); // Serve login.html if no token exists
