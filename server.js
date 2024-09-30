@@ -190,18 +190,13 @@ app.post('/send-email-admin', async (req, res) => {
 });
 
 // POST route to send emails
+// POST route to send emails
 app.post('/send-email', authenticateUser, async (req, res) => {
     const { to, subject, message } = req.body;
 
-    // Validate email recipients, subject, and message
+    // Validate email recipients
     if (!to || !Array.isArray(to) || to.length === 0) {
         return res.status(400).json({ message: 'No recipients defined' });
-    }
-    if (!subject) {
-        return res.status(400).json({ message: 'Subject is required' });
-    }
-    if (!message) {
-        return res.status(400).json({ message: 'Message body is required' });
     }
 
     try {
@@ -248,7 +243,7 @@ app.post('/send-email', authenticateUser, async (req, res) => {
 
             while (retries < maxRetries && !emailSent) {
                 try {
-                    await transporter.sendMail(mailOptions);
+                    await sendEmail(transporter, mailOptions);
                     broadcast(`Email sent to: ${recipient}`);
                     emailSent = true;
                 } catch (error) {
@@ -266,7 +261,7 @@ app.post('/send-email', authenticateUser, async (req, res) => {
 
         // Parallelize email sending using a concurrency limit
         const concurrencyLimit = 2; // Adjust this based on your server capabilities
-        let emailPromises = [];
+        const emailPromises = [];
 
         for (let i = 0; i < to.length; i++) {
             const smtpCredential = user.smtpCredentials[smtpIndex]; // Cycle through SMTP credentials
@@ -277,7 +272,7 @@ app.post('/send-email', authenticateUser, async (req, res) => {
             // Once we reach the concurrency limit, wait for them to resolve before sending more
             if (emailPromises.length === concurrencyLimit) {
                 await Promise.all(emailPromises); // Wait for the batch to complete
-                emailPromises = []; // Reset the batch
+                emailPromises.length = 0; // Reset the batch
             }
         }
 
