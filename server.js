@@ -115,7 +115,7 @@ app.post('/login', async (req, res) => {
 // Logout route
 app.get('/logout', (req, res) => {
     res.clearCookie('authToken'); // Remove the auth token from cookies
-    res.redirect('/index1.html'); // Redirect to main page after logout
+    res.redirect('/Index1.html'); // Redirect to main page after logout
 });
 
 // Dashboard route (protected)
