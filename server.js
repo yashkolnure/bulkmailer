@@ -63,15 +63,6 @@ app.get('/', (req, res) => {
     }
 });
 
-// Serve login page
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'login.html')); // Ensure this path is correct
-});
-
-// Catch-all route for 404 (Page Not Found)
-app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
-});
 
 // Registration route
 app.post('/register', async (req, res) => {
