@@ -312,11 +312,10 @@
 
     
   <!-- Include PapaParse for CSV parsing -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-  <script src="app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+<script src="app.js"></script>
 
-  <script>
-    
+<script>
     document.addEventListener('DOMContentLoaded', async () => {
         try {
             // Fetch the SMTP usage data
@@ -346,142 +345,127 @@
     });
 </script>
 
-    
-    <script>
-// script.js
-document.getElementById('smtp-settings-btn').addEventListener('click', async (e) => {
-    e.preventDefault(); // Prevent the default link behavior
-    console.log("SMTP Settings button clicked");
+<script>
+    // Script for fetching and displaying SMTP settings in a modal
+    document.getElementById('smtp-settings-btn').addEventListener('click', async (e) => {
+        e.preventDefault(); // Prevent default link behavior
+        console.log("SMTP Settings button clicked");
 
-    try {
-        const response = await fetch('/api/smtp-settings'); // Fetch SMTP settings from the backend
-        console.log("Response from API:", response);
+        try {
+            const response = await fetch('/api/smtp-settings'); // Fetch SMTP settings from the backend
+            console.log("Response from API:", response);
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        const smtpDetails = await response.json(); // Convert response to JSON
-        console.log("SMTP Details:", smtpDetails);
-
-        // Display SMTP settings in the modal
-        const smtpDetailsDiv = document.getElementById('smtp-details');
-        smtpDetailsDiv.innerHTML = ''; // Clear previous content
-        smtpDetails.forEach(smtp => {
-            const detail = document.createElement('div');
-            detail.innerHTML = `
-               <hr>
-                
-                <p><strong>Email:</strong> ${smtp.email}</p>
-                <p><strong>Host:</strong> ${smtp.host}</p>
-                <p><strong>Port:</strong> ${smtp.port}</p>
-               
-            `;
-            smtpDetailsDiv.appendChild(detail);
-        });
-
-        // Show the modal
-        document.getElementById('smtp-modal').style.display = 'block';
-    } catch (error) {
-        console.error('Error fetching SMTP settings:', error);
-        alert('Failed to fetch SMTP settings. Please try again later.');
-    }
-});
-
-// Close the modal when the user clicks on <span> (x)
-document.querySelector('.close-btn').onclick = function() {
-    document.getElementById('smtp-modal').style.display = 'none';
-};
-
-// Close the modal when the user clicks anywhere outside of the modal
-window.onclick = function(event) {
-    const modal = document.getElementById('smtp-modal');
-    if (event.target === modal) {
-        modal.style.display = 'none';
-    }
-};
-
-
-
-        // Toggle sidebar visibility on mobile
-        const toggle = document.getElementById("toggle");
-        const sidebar = document.getElementById("sidebar");
-
-        toggle.addEventListener("change", function() {
-            if (this.checked) {
-                sidebar.classList.add("active");
-            } else {
-                sidebar.classList.remove("active");
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
-        });
 
-        document.getElementById('sendButton').addEventListener('click', function() {
-      document.getElementById('statusDiv').innerText = 'Emails sending............';
-     });
-    const sendButton = document.getElementById('sendButton');
-        const countdownDisplay = document.getElementById('countdown');
-        const emailForm = document.getElementById('emailForm');
-        emailForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
+            const smtpDetails = await response.json(); // Convert response to JSON
+            console.log("SMTP Details:", smtpDetails);
 
-            // Disable the button and show the countdown
-            sendButton.classList.add('disabled');
-            sendButton.disabled = true;
+            // Display SMTP settings in the modal
+            const smtpDetailsDiv = document.getElementById('smtp-details');
+            smtpDetailsDiv.innerHTML = ''; // Clear previous content
+            smtpDetails.forEach(smtp => {
+                const detail = document.createElement('div');
+                detail.innerHTML = `
+                    <hr>
+                    <p><strong>Email:</strong> ${smtp.email}</p>
+                    <p><strong>Host:</strong> ${smtp.host}</p>
+                    <p><strong>Port:</strong> ${smtp.port}</p>
+                `;
+                smtpDetailsDiv.appendChild(detail);
+            });
 
-            let remainingTime = 600; // 600 seconds countdown
-            
-          
-            // Simulate email sending or perform the main functionality here
-            console.log('Emails sent!'); // Replace this with actual email sending logic
-            broadcast(`Email sent to: ${to[i]}`);
-        });
-       
-
-    </script>
-    <script>
-      
-    </script>
-<div id="smtp-modal" class="modal">
-  <div class="modal-content">
-      <span class="close-btn">&times;</span>
-      <h2>Your SMTP Settings</h2>
-      <div id="smtp-details">
-          <!-- SMTP details will be populated here -->
-      </div>
-  </div>
-</div>
+            // Show the modal
+            document.getElementById('smtp-modal').style.display = 'block';
+        } catch (error) {
+            console.error('Error fetching SMTP settings:', error);
+            alert('Failed to fetch SMTP settings. Please try again later.');
+        }
+    });
+</script>
 
 <script>
-    // Your other JavaScript code
+    // Email form submission logic
+    const emailForm = document.getElementById('emailForm');
+    const sendButton = document.getElementById('sendButton');
+    const countdownDisplay = document.getElementById('countdown');
 
-    // Close the modal when the user clicks on <span> (x)
-    document.querySelector('.close-btn').addEventListener('click', function() {
-        document.getElementById('smtp-modal').style.display = 'none';
+    emailForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Disable the button and show the countdown
+        sendButton.classList.add('disabled');
+        sendButton.disabled = true;
+
+        let remainingTime = 600; // 600 seconds countdown
+        
+        // Simulate email sending or perform the main functionality here
+        console.log('Emails sent!'); // Replace this with actual email sending logic
+        broadcast(`Email sent to: ${to[i]}`);
     });
 
-    // Close the modal when the user clicks anywhere outside of the modal
-    window.addEventListener('click', function(event) {
+    // Status display when sending emails
+    document.getElementById('sendButton').addEventListener('click', function() {
+        document.getElementById('statusDiv').innerText = 'Emails sending............';
+    });
+</script>
+
+<script>
+    // Modal close functionality
+    document.querySelector('.close-btn').onclick = function() {
+        document.getElementById('smtp-modal').style.display = 'none';
+    };
+
+    window.onclick = function(event) {
         const modal = document.getElementById('smtp-modal');
         if (event.target === modal) {
             modal.style.display = 'none';
         }
-    });
-
-    // Logout functionality
-document.getElementById('logoutButton').addEventListener('click', async (event) => {
-  event.preventDefault(); // Prevent default button action
-  const response = await fetch('/logout', { method: 'GET', credentials: 'include' });
-  
-  if (response.ok) {
-    window.location.href = '/login.html'; // Redirect to login page after logout
-  } else {
-    const errorText = await response.text(); // Get error text if any
-    console.error('Logout failed:', errorText); // Log the error for debugging
-    alert('Error logging out: ' + errorText); // Display the error
-  }
-});
-
+    };
 </script>
+
+<script>
+    // Sidebar toggle for mobile view
+    const toggle = document.getElementById("toggle");
+    const sidebar = document.getElementById("sidebar");
+
+    toggle.addEventListener("change", function() {
+        if (this.checked) {
+            sidebar.classList.add("active");
+        } else {
+            sidebar.classList.remove("active");
+        }
+    });
+</script>
+
+<script>
+    // Logout functionality
+    document.getElementById('logoutButton').addEventListener('click', async (event) => {
+        event.preventDefault(); // Prevent default button action
+        const response = await fetch('/logout', { method: 'GET', credentials: 'include' });
+        
+        if (response.ok) {
+            window.location.href = '/login.html'; // Redirect to login page after logout
+        } else {
+            const errorText = await response.text(); // Get error text if any
+            console.error('Logout failed:', errorText); // Log the error for debugging
+            alert('Error logging out: ' + errorText); // Display the error
+        }
+    });
+</script>
+
+<!-- Modal structure -->
+<div id="smtp-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Your SMTP Settings</h2>
+        <div id="smtp-details">
+            <!-- SMTP details will be populated here -->
+        </div>
+    </div>
+</div>
+
 </body>
 
 </html>
