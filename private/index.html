@@ -1,212 +1,421 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send Bulk Emails Birdmailer.in</title>
+    <title>Bird Mailer Dashboard</title>
     <link rel="icon" href="birdmailer.ico" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
-</head>
-<style>
-  
-:root {
-  --primary-color: #111317;
-  --primary-color-light: #1f2125;
-  --primary-color-extra-light: #35373b;
-  --secondary-color: #f9ac54;
-  --secondary-color-dark: #d79447;
-  --text-light: #d1d5db;
-  --white: #ffffff;
-  --max-width: 1200px;
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #111317;
+            --primary-color-light: #1f2125;
+            --primary-color-extra-light: #35373b;
+            --secondary-color: #f9ac54;
+            --text-light: #d1d5db;
+            --white: #ffffff;
+            --max-width: 1200px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--primary-color);
+            color: var(--white);
+            margin: 0;
+            padding: 0;
+            transition: margin-left 0.3s;
+        }
+
+        /* Top Navigation */
+        .navbar {
+            background-color: var(--primary-color-light);
+            padding: 10px 20px;
+            display: flex;
+            border-radius: 20px 20px 0px 0px;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .navbar h1 {
+            color: var(--secondary-color);
+            margin: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background-color: var(--primary-color-extra-light);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border-right: 1px solid var(--secondary-color);
+            transition: transform 0.3s;
+        }
+
+        .sidebar a {
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background-color: var(--primary-color-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar a:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        /* Content Container */
+        .container {
+            margin-left: 270px;
+            padding: 40px;
+            max-width: calc(100% - 270px);
+        }
+
+        /* Card Design */
+        .card {
+            background-color: var(--primary-color-extra-light);
+            padding: 30px;
+            border-radius: 0px 0px 20px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            margin: 0 0 20px;
+            color: var(--secondary-color);
+        }
+
+        /* Form Design */
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        input, textarea {
+            width: calc(100% - 0px); /* Adjusting width for padding */
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            color: var(--primary-color);
+            box-sizing: border-box; /* Ensures padding is included in the width */
+            background-color: rgb(243, 243, 243)
+        }
+
+        textarea {
+            height: 150px;
+            resize: none;
+        }
+
+        /* Button Design */
+        #sendButton {
+            padding: 12px 20px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        #sendButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
-/* Additional styles for spacing */
-body {
-    font-family: 'Arial', sans-serif;
-    overflow: auto;
-    background: #111317;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Change to flex-start to allow normal flow */
-    min-height: 100vh; /* Allow for scrolling */
-    margin: 0;
-    padding: 20px; /* Add padding to prevent content from touching edges */
-    box-sizing: border-box; /* Include padding in height calculations */
-}
-        @keyframes gradient {
-    0% {
-        background-position: 0% 0%;
-    }
-    50% {
-        background-position: 100% 100%;
-    }
-    100% {
-        background-position: 0% 0%;
-    }
+        .btn-logout {
+            margin-top: 20px;
+            background-color: #dc3545;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #f9ac54;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: absolute;
+                height: auto;
+                width: 100%;
+                transition: transform 0.3s;
+            }
+
+            .container {
+                margin-left: 0;
+                max-width: 100%;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .navbar .toggle-btn {
+                display: block;
+            }
+        }
+
+        .toggle-btn {
+            display: none;
+        }
+        /* styles.css */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-.bg__blur {
-  position: absolute;
-  box-shadow: 0 0 1500px 70px var(--secondary-color);
-  z-index: -1;
-}
-.header__blur {
-  bottom: 5rem;
-  right: 2rem;
+.modal-content {
+    background-color: var(--primary-color);
+    margin: 3% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
 }
 
-.container {
-    max-width: 600px; /* Limit the width for better readability */
-    width: 100%; /* Allow full width */
-    background: white; /* Background color for contrast */
-    padding: 20px; /* Add padding inside the container */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
 }
 
-#sendButton {
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
     cursor: pointer;
 }
 
-#sendButton:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-#result {
-    margin-top: 20px; /* Space above the result div */
-    padding: 10px;
-    background-color: #e9ecef;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 16px;
-    color: #495057;
-}
-
-#logoutButton {
-    margin-top: 20px; /* Space above the logout button */
-}
-
-#smtpButton {
-    display: inline-block; /* Makes the anchor behave like a button */
-    padding: 10px 15px;
-    margin-top: 20px;
-    background-color: #007bff;
-    color: white;
-    text-decoration: none; /* Removes underline */
-    border-radius: 4px;
-}
-
-#smtpButton:hover {
-    background-color: #0056b3; /* Darker shade on hover */
-}
-
-.cooldown {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-.copyright {
-            margin-top: 1.5em;
-            font-size: 0.8em;
-            color: #666;
-        }
-
-        .copyrigh {
-            margin-top: 0.2em;
-            font-size: 0.8em;
-            color: #666;
-        }
-        
-
-        .line {
-            margin: 1em 0;
-            border-top: 1px solid #ccc;
-          }
-
-          .logo {
-            align-items: center;
-            width: 80px; /* Adjust size as needed */
-            height: 80px; /* Adjust size as needed */
-            border-radius: 50%; /* Makes it circular */
-            margin-bottom: 1.5em;
-            border: 4px solid #007bff; /* Add a border with desired color and thickness */
-            object-fit: cover; /* Ensures the image fits well within the circle */
-          }
-          .logo-container {
-            
-          display: flex;
-          justify-content: center;
-          }
-          a {
-          color: #007bff; /* Change this to your desired color */
-           }
-
-</style>
+    </style>
+</head>
 <body>
-  <div class="container">
-    <div class="logo-container">
-    <img src="/logo.png" alt="Logo" class="logo"> 
+     <!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <div style="display: flex; align-items: center; margin-bottom: 20px;">
+      <img src="/logo.png" alt="Bird Mailer Logo" style="width: 50px; height: auto; margin-right: 10px;"/> <!-- Add your logo here -->
+      <h2 style="color: var(--secondary-color); margin: 0;">birdmailer.in</h2>
   </div>
-    <h1>Send Bulk Emails in One Click</h1>
-  
-    
-    <form id="emailForm">
-      <!-- CSV File Upload -->
-      <label for="csvFile">Upload CSV (for recipient emails):</label>
-      <input type="file" id="csvFile" accept=".csv">
+  <a href="#"><i class="fas fa-envelope"></i> Send Emails</a>
+  <a href="#" id="smtp-settings-btn"><i class="fas fa-cogs"></i> SMTP Settings</a>
+  <!--<a href="#"><i class="fas fa-file-alt"></i> Templates</a>
+  <a href="#"><i class="fas fa-chart-line"></i> Reports</a>
+  <a href="#"><i class="fas fa-user-cog"></i> Settings</a>-->
+  <a href="#" class="btn-logout" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</a>
+</div>
 
-      <!-- This will hold the emails extracted from CSV -->
-      <label for="to">Recipient Emails:</label>
-      <input type="text" id="to" name="to" placeholder="Recipient emails will appear here" required>
+    <!-- Main Content Container -->
+    <div class="container">
+        <!-- Top Navbar -->
+        <div class="navbar">
+            <h1>Bird Mailer Dashboard</h1>
+            <label class="switch">
+                <input type="checkbox" id="toggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+        <!-- Email Sending Section -->
+        <div class="card">
+            <h2><i class="fas fa-paper-plane"></i> Send Bulk Emails</h2>
+            <form id="emailForm">
+                <label for="csvFile">Upload CSV (for recipient emails):</label>
+                <input type="file" id="csvFile" accept=".csv">
 
-      <label for="subject">Subject:</label>
-      <input type="text" id="subject" name="subject" placeholder="Email subject" required>
+                <label for="to">Recipient Emails:</label>
+                <input type="text" id="to" name="to" placeholder="Recipient emails will appear here" required>
 
-      <label for="message">Message:</label>
-      <textarea id="message" name="message" placeholder="Type your message here...
-<div> 
-  HTML allowed 
-</div>." required></textarea>
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" name="subject" placeholder="Email subject" required>
 
-      <button id="sendButton" type="submit">Send Emails</button>
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" placeholder="Type your message here..." required></textarea>
+
+                <button id="sendButton" type="submit">Send Emails</button>
       <div id="countdown"></div>
       <div id="statusDiv"></div>
-      <div id="result"></div>
-      
-      <div>
-        <button id="logoutButton">Logout</button> <!-- Logout Button -->
-      </div>
-      
-    </form>
-    <div class="line"></div>
-    <p class="copyright">© 2024 Copyright Reserved</p>
-    <p class="copyrigh">Product of <a href="https://www.avenirya.com/"> Avenirya Solutions OPC Private Limited</p>
-  </div>
-  <span class="bg__blur"></span>
-    <span class="bg__blur header__blur"></span>
+                <div id="sendResult"></div>
+            </form>
+        </div>
+
+       <!-- Reports Section -->
+<div class="card" id="smtp-usage">
+  <h2><i class="fas fa-chart-pie"></i> SMTP Usage</h2>
+  <p id="smtp-connections">SMTP Connections: Loading...</p>
+  <p id="emails-sent">Emails Sent: Loading...</p>
+  <progress id="usage-progress" max="2000" value="0"></progress>
+</div>
+        <div class="card">
+          <h2><i class="fas fa-envelope"></i> Emails Sent</h2>
+          <div id="result"></div>
+        </div>
+    </div>
+
+    
   <!-- Include PapaParse for CSV parsing -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
   <script src="app.js"></script>
-  <script>
-    const socket = io();
 
-    // Listen for email status messages
-    socket.on('emailStatus', (message) => {
-        const statusDiv = document.getElementById('statusDiv');
-        const newMessage = document.createElement('div');
-        newMessage.textContent = message;
-        statusDiv.appendChild(newMessage);
-    });
+  <script>
     
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            // Fetch the SMTP usage data
+            const response = await fetch('/api/smtp-usage', {
+                method: 'GET',
+                credentials: 'include', // Ensure cookies are included for auth
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch SMTP usage data');
+            }
+
+            const data = await response.json();
+
+            // Update the DOM with the fetched data
+            document.getElementById('smtp-connections').innerText = `SMTP Connections: ${data.smtpConnections}`;
+            document.getElementById('emails-sent').innerText = `Emails Sent: ${data.emailsSentToday}/${data.dailyLimit} today`;
+            document.getElementById('usage-progress').max = data.dailyLimit;
+            document.getElementById('usage-progress').value = data.emailsSentToday;
+
+        } catch (error) {
+            console.error('Error updating SMTP usage:', error);
+            // Handle error appropriately
+            document.getElementById('smtp-connections').innerText = 'Error fetching connections';
+            document.getElementById('emails-sent').innerText = 'Error fetching email data';
+        }
+    });
 </script>
 
-  <script>
-     document.getElementById('sendButton').addEventListener('click', function() {
+    
+    <script>
+// script.js
+document.getElementById('smtp-settings-btn').addEventListener('click', async (e) => {
+    e.preventDefault(); // Prevent the default link behavior
+    console.log("SMTP Settings button clicked");
+
+    try {
+        const response = await fetch('/api/smtp-settings'); // Fetch SMTP settings from the backend
+        console.log("Response from API:", response);
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const smtpDetails = await response.json(); // Convert response to JSON
+        console.log("SMTP Details:", smtpDetails);
+
+        // Display SMTP settings in the modal
+        const smtpDetailsDiv = document.getElementById('smtp-details');
+        smtpDetailsDiv.innerHTML = ''; // Clear previous content
+        smtpDetails.forEach(smtp => {
+            const detail = document.createElement('div');
+            detail.innerHTML = `
+               <hr>
+                
+                <p><strong>Email:</strong> ${smtp.email}</p>
+                <p><strong>Host:</strong> ${smtp.host}</p>
+                <p><strong>Port:</strong> ${smtp.port}</p>
+               
+            `;
+            smtpDetailsDiv.appendChild(detail);
+        });
+
+        // Show the modal
+        document.getElementById('smtp-modal').style.display = 'block';
+    } catch (error) {
+        console.error('Error fetching SMTP settings:', error);
+        alert('Failed to fetch SMTP settings. Please try again later.');
+    }
+});
+
+// Close the modal when the user clicks on <span> (x)
+document.querySelector('.close-btn').onclick = function() {
+    document.getElementById('smtp-modal').style.display = 'none';
+};
+
+// Close the modal when the user clicks anywhere outside of the modal
+window.onclick = function(event) {
+    const modal = document.getElementById('smtp-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+};
+
+
+
+        // Toggle sidebar visibility on mobile
+        const toggle = document.getElementById("toggle");
+        const sidebar = document.getElementById("sidebar");
+
+        toggle.addEventListener("change", function() {
+            if (this.checked) {
+                sidebar.classList.add("active");
+            } else {
+                sidebar.classList.remove("active");
+            }
+        });
+
+        document.getElementById('sendButton').addEventListener('click', function() {
       document.getElementById('statusDiv').innerText = 'Emails sending............';
      });
     const sendButton = document.getElementById('sendButton');
@@ -226,19 +435,53 @@ body {
             console.log('Emails sent!'); // Replace this with actual email sending logic
             broadcast(`Email sent to: ${to[i]}`);
         });
+       
 
-        
+    </script>
+    <script>
+      
+    </script>
+<div id="smtp-modal" class="modal">
+  <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <h2>Your SMTP Settings</h2>
+      <div id="smtp-details">
+          <!-- SMTP details will be populated here -->
+      </div>
+  </div>
+</div>
 
+<script>
+    // Your other JavaScript code
+
+    // Close the modal when the user clicks on <span> (x)
+    document.querySelector('.close-btn').addEventListener('click', function() {
+        document.getElementById('smtp-modal').style.display = 'none';
+    });
+
+    // Close the modal when the user clicks anywhere outside of the modal
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('smtp-modal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
 
     // Logout functionality
-    document.getElementById('logoutButton').addEventListener('click', async () => {
-      const response = await fetch('/logout', { method: 'GET', credentials: 'include' });
-      if (response.ok) {
-        window.location.href = '/login'; // Redirect to login page after logout
-      } else {
-        alert('Error logging out. Please try again.');
-      }
-    });
-  </script>       
+document.getElementById('logoutButton').addEventListener('click', async (event) => {
+  event.preventDefault(); // Prevent default button action
+  const response = await fetch('/logout', { method: 'GET', credentials: 'include' });
+  
+  if (response.ok) {
+    window.location.href = '/login.html'; // Redirect to login page after logout
+  } else {
+    const errorText = await response.text(); // Get error text if any
+    console.error('Logout failed:', errorText); // Log the error for debugging
+    alert('Error logging out: ' + errorText); // Display the error
+  }
+});
+
+</script>
 </body>
+
 </html>

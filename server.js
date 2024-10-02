@@ -63,7 +63,6 @@ app.get('/', (req, res) => {
     }
 });
 
-
 // Registration route
 app.post('/register', async (req, res) => {
     const { username, email, password, smtpCredentials } = req.body;
@@ -187,7 +186,6 @@ app.post('/send-email-admin', async (req, res) => {
 });
 
 // POST route to send emails
-// POST route to send emails
 app.post('/send-email', authenticateUser, async (req, res) => {
     const { to, subject, message } = req.body;
 
@@ -201,6 +199,15 @@ app.post('/send-email', authenticateUser, async (req, res) => {
         const user = await User.findById(req.user.id).populate('smtpCredentials');
         if (!user || !user.smtpCredentials || user.smtpCredentials.length === 0) {
             return res.status(400).json({ message: 'No SMTP credentials found for the user.' });
+        }
+
+        const today = new Date();
+        const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        // Reset count if it's a new day
+        if (user.emailsSentToday.date < todayStart) {
+            user.emailsSentToday.count = 0;
+            user.emailsSentToday.date = today;
         }
 
         const maxRetries = 1; // Maximum retries for a failed email
@@ -278,13 +285,53 @@ app.post('/send-email', authenticateUser, async (req, res) => {
             await Promise.all(emailPromises);
         }
 
+        // Increment email sent count after all emails have been sent
+        user.emailsSentToday.count += to.length; // Increment by the number of recipients
+        await user.save(); // Save user to update count
+
         res.status(200).json({ message: 'All emails sent successfully!' });
     } catch (error) {
         console.error(`Error sending emails: ${error.message}`);
         res.status(500).json({ message: 'Error sending emails.', error: error.message });
     }
 });
+// Express API endpoint
+app.get('/api/smtp-settings', authenticateUser, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id); // Find the authenticated user
+        if (!user || !user.smtpCredentials) {
+            return res.status(404).json({ message: 'No SMTP settings found.' });
+        }
+        res.json(user.smtpCredentials); // Return the SMTP credentials
+    } catch (error) {
+        console.error('Error fetching SMTP settings:', error);
+        res.status(500).json({ message: 'Error fetching SMTP settings' });
+    }
+});
 
+
+// Endpoint to get SMTP usage data for the authenticated user
+app.get('/api/smtp-usage', authenticateUser, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).populate('smtpCredentials');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const smtpConnections = user.smtpCredentials.length; // Number of SMTP connections
+        const emailsSentToday = user.emailsSentToday.count; // Emails sent today
+        const dailyLimit = 2000; // Set your daily limit
+
+        res.json({
+            smtpConnections,
+            emailsSentToday,
+            dailyLimit
+        });
+    } catch (error) {
+        console.error('Error fetching SMTP usage:', error);
+        res.status(500).json({ message: 'Error fetching SMTP usage' });
+    }
+});
 
 // WebSocket setup
 const server = app.listen(port, '0.0.0.0', () => {
@@ -310,6 +357,8 @@ wss.on('connection', (ws) => {
         broadcast(`Server: ${message}`); // Echo message back to all clients
     });
 });
+
+
 
 // Run function to perform initial actions
 async function run() {
