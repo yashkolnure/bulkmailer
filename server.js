@@ -165,13 +165,13 @@ app.post('/send-email-admin', async (req, res) => {
             port: 465,
             secure: true, // true for port 465
             auth: {
-                user: 'marketing1@avenirya.com', // Your authenticated email
+                user: 'marketing5@avenirya.com', // Your authenticated email
                 pass: mailpassadmin, // Password from environment variable
             },
         });
 
         await transporter.sendMail({
-            from: '"Bird Mailer" <marketing1@avenirya.com>', // Use the authenticated email
+            from: '"Bird Mailer" <marketing5@avenirya.com>', // Use the authenticated email
             to: 'admin@avenirya.com, yashkolnure58@gmail.com', // List of receivers
             subject: 'New Contact Form Submission',
             text: `You have a new message from ${name} (${email}): ${message}`,
