@@ -256,6 +256,8 @@
       <img src="/logo.png" alt="Bird Mailer Logo" style="width: 50px; height: auto; margin-right: 10px;"/> <!-- Add your logo here -->
       <h2 style="color: var(--secondary-color); margin: 0;">birdmailer.in</h2>
   </div>
+  <a id="welcome-message"></a>
+
   <a href="#"><i class="fas fa-envelope"></i> Send Emails</a>
   <a href="#" id="smtp-settings-btn"><i class="fas fa-cogs"></i> SMTP Settings</a>
   <!--<a href="#"><i class="fas fa-file-alt"></i> Templates</a>
@@ -314,6 +316,31 @@
   <!-- Include PapaParse for CSV parsing -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 <script src="app.js"></script>
+
+<script>
+  async function fetchUserData() {
+      try {
+          const response = await fetch('/dashboard', {
+              method: 'GET',
+              credentials: 'include' // Include cookies for authentication
+          });
+
+          if (response.ok) {
+              const data = await response.json();
+              document.getElementById('welcome-message').innerText = data.message;
+          } else {
+              // Handle error (e.g., redirect to login)
+              window.location.href = '/Index1.html';
+          }
+      } catch (error) {
+          console.error('Error fetching user data:', error);
+          // Handle error
+      }
+  }
+
+  // Call the function to fetch user data when the page loads
+  window.onload = fetchUserData;
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', async () => {
@@ -425,6 +452,45 @@
           }
       });
   });
+
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const response = await fetch('/api/username', {
+            method: 'GET',
+            credentials: 'include', // Ensure cookies are included for auth
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch username');
+        }
+
+        const data = await response.json();
+        document.getElementById('username').textContent = data.username; // Set the username
+
+        // Fetch SMTP usage data as before
+        const smtpResponse = await fetch('/api/smtp-usage', {
+            method: 'GET',
+            credentials: 'include',
+        });
+
+        if (!smtpResponse.ok) {
+            throw new Error('Failed to fetch SMTP usage data');
+        }
+
+        const smtpData = await smtpResponse.json();
+        document.getElementById('smtp-connections').innerText = `SMTP Connections: ${smtpData.smtpConnections}`;
+        document.getElementById('emails-sent').innerText = `Emails Sent: ${smtpData.emailsSentToday}/${smtpData.dailyLimit} today`;
+        document.getElementById('usage-progress').max = smtpData.dailyLimit;
+        document.getElementById('usage-progress').value = smtpData.emailsSentToday;
+
+    } catch (error) {
+        console.error('Error fetching username or SMTP usage:', error);
+        document.getElementById('username').textContent = 'Guest'; // Fallback if error occurs
+    }
+});
+
+
 </script>
 
 

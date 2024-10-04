@@ -9,6 +9,7 @@ const User = require('./models/user'); // Adjust the path as needed
 const WebSocket = require('ws');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const cors = require('cors');
 
 const app = express();
@@ -46,6 +47,13 @@ const authenticateUser = (req, res, next) => {
         return res.redirect('/Index1.html'); // Redirect to login if token verification fails
     }
 };
+
+
+// Dashboard route (protected)
+app.get('/dashboard', authenticateUser, (req, res) => {
+    res.json({ message: `Welcome, ${req.user.email}!`, username: req.user.username }); // Send username along with the message
+});
+
 
 
 // Serve the main login page
@@ -118,10 +126,7 @@ app.get('/logout', (req, res) => {
     res.redirect('/Index1.html'); // Redirect to main page after logout
 });
 
-// Dashboard route (protected)
-app.get('/dashboard', authenticateUser, (req, res) => {
-    res.send(`Welcome, ${req.user.email}! This is the dashboard.`); // Display user's email or other info
-});
+
 
 // Email sending logic
 const createTransporter = ({ user, pass, host, port }) => {
@@ -171,7 +176,7 @@ app.post('/send-email-admin', async (req, res) => {
         });
 
         await transporter.sendMail({
-            from: '"Bird Mailer" <marketing5@avenirya.com>', // Use the authenticated email
+            from: '"Bird Mailer" <marketing20@avenirya.com>', // Use the authenticated email
             to: 'admin@avenirya.com, yashkolnure58@gmail.com', // List of receivers
             subject: 'New Contact Form Submission',
             text: `You have a new message from ${name} (${email}): ${message}`,
@@ -210,7 +215,7 @@ app.post('/send-email', authenticateUser, async (req, res) => {
             user.emailsSentToday.date = today;
         }
 
-        const maxRetries = 1; // Maximum retries for a failed email
+        const maxRetries = 2; // Maximum retries for a failed email
         const smtpCount = user.smtpCredentials.length; // Get total number of SMTP servers
 
         if (smtpCount === 0) {
@@ -238,6 +243,7 @@ app.post('/send-email', authenticateUser, async (req, res) => {
                         ${message}
                         <br>
                         <p style="font-size: small; color: gray;">This email is sent with <a href="https://birdmailer.in/">Birdmailer.in</a>.</p>
+                        
                     </div>
                 `,
             };
@@ -264,7 +270,7 @@ app.post('/send-email', authenticateUser, async (req, res) => {
         };
 
         // Parallelize email sending using a concurrency limit
-        const concurrencyLimit = 2; // Adjust this based on your server capabilities
+        const concurrencyLimit = 1; // Adjust this based on your server capabilities
         const emailPromises = [];
 
         for (let i = 0; i < to.length; i++) {
@@ -272,6 +278,10 @@ app.post('/send-email', authenticateUser, async (req, res) => {
             emailPromises.push(sendMailWithRetries(to[i], smtpCredential));
 
             smtpIndex = (smtpIndex + 1) % smtpCount; // Rotate SMTP servers
+
+            // Add a delay after each email is sent
+            await delay(500); // Delay in milliseconds (e.g., 500 ms = 0.5 seconds)
+
 
             // Once we reach the concurrency limit, wait for them to resolve before sending more
             if (emailPromises.length === concurrencyLimit) {
