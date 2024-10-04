@@ -170,7 +170,7 @@ app.post('/send-email-admin', async (req, res) => {
             port: 465,
             secure: true, // true for port 465
             auth: {
-                user: 'marketing5@avenirya.com', // Your authenticated email
+                user: 'marketing20@avenirya.com', // Your authenticated email
                 pass: mailpassadmin, // Password from environment variable
             },
         });
