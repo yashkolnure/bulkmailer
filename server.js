@@ -11,8 +11,7 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const cors = require('cors');
-const https = require('https');
-const fs = require('fs');
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,39 +25,6 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.static('public')); // Serve static files from the 'public' folder
 
-
-
-// Load SSL certificate and key
-const server = https.createServer({
-    key: fs.readFileSync('/etc/letsencrypt/live/birdmailer.in/privkey.pem'), // Private key path
-    cert: fs.readFileSync('/etc/letsencrypt/live/birdmailer.in/fullchain.pem') // Certificate path
-}, app).listen(port, '0.0.0.0', () => {
-    console.log(`Server is running on https://localhost:${port}`);
-});
-
-// Create a WebSocket server that uses the HTTPS server
-const wss = new WebSocket.Server({ server });
-
-// Handle WebSocket connections
-wss.on('connection', (ws) => {
-    console.log('Client connected');
-
-    // Handle incoming messages from clients
-    ws.on('message', (message) => {
-        console.log(`Received: ${message}`);
-        ws.send('Hello from the server!'); // Send a message back to the client
-    });
-
-    // Handle client disconnection
-    ws.on('close', () => {
-        console.log('Client disconnected');
-    });
-
-    // Handle errors
-    ws.on('error', (error) => {
-        console.error('WebSocket error:', error);
-    });
-});
 // MongoDB connection
 mongoose.connect(mongoUri)
     .then(() => {
@@ -399,6 +365,12 @@ app.get('/api/smtp-usage', authenticateUser, async (req, res) => {
     }
 });
 
+// WebSocket setup
+const server = app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
+
+const wss = new WebSocket.Server({ server });
 
 // Broadcast function to send messages to all connected clients
 const broadcast = (message) => {
