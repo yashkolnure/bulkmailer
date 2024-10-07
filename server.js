@@ -11,6 +11,8 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const cors = require('cors');
+const https = require('https');
+const fs = require('fs');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,6 +26,39 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.static('public')); // Serve static files from the 'public' folder
 
+
+
+// Load SSL certificate and key
+const server = https.createServer({
+    key: fs.readFileSync('/etc/letsencrypt/live/birdmailer.in/privkey.pem'), // Private key path
+    cert: fs.readFileSync('/etc/letsencrypt/live/birdmailer.in/fullchain.pem') // Certificate path
+}, app).listen(port, '0.0.0.0', () => {
+    console.log(`Server is running on https://localhost:${port}`);
+});
+
+// Create a WebSocket server that uses the HTTPS server
+const wss = new WebSocket.Server({ server });
+
+// Handle WebSocket connections
+wss.on('connection', (ws) => {
+    console.log('Client connected');
+
+    // Handle incoming messages from clients
+    ws.on('message', (message) => {
+        console.log(`Received: ${message}`);
+        ws.send('Hello from the server!'); // Send a message back to the client
+    });
+
+    // Handle client disconnection
+    ws.on('close', () => {
+        console.log('Client disconnected');
+    });
+
+    // Handle errors
+    ws.on('error', (error) => {
+        console.error('WebSocket error:', error);
+    });
+});
 // MongoDB connection
 mongoose.connect(mongoUri)
     .then(() => {
@@ -189,6 +224,7 @@ app.post('/send-email-admin', async (req, res) => {
         res.status(500).send('Error sending email: ' + error.message); // Send the error message
     }
 });
+let isSendingEmails = false; // Global variable to track if emails are being sent
 
 // POST route to send emails
 app.post('/send-email', authenticateUser, async (req, res) => {
@@ -199,10 +235,19 @@ app.post('/send-email', authenticateUser, async (req, res) => {
         return res.status(400).json({ message: 'No recipients defined' });
     }
 
+    // Check if email-sending process is already running
+    if (isSendingEmails) {
+        return res.status(400).json({ message: 'Email sending process is already in progress.' });
+    }
+
     try {
+        // Mark the process as running
+        isSendingEmails = true;
+
         // Fetch user and their SMTP credentials from the database
         const user = await User.findById(req.user.id).populate('smtpCredentials');
         if (!user || !user.smtpCredentials || user.smtpCredentials.length === 0) {
+            isSendingEmails = false; // Reset the flag in case of error
             return res.status(400).json({ message: 'No SMTP credentials found for the user.' });
         }
 
@@ -219,6 +264,7 @@ app.post('/send-email', authenticateUser, async (req, res) => {
         const smtpCount = user.smtpCredentials.length; // Get total number of SMTP servers
 
         if (smtpCount === 0) {
+            isSendingEmails = false; // Reset the flag in case of error
             return res.status(400).json({ message: 'No SMTP servers configured.' });
         }
 
@@ -239,13 +285,13 @@ app.post('/send-email', authenticateUser, async (req, res) => {
                 subject: subject,
                 replyTo: user.email,
                 html: `
-                    <div>
-                        ${message}
-                        <br>
-                        <p style="font-size: small; color: gray;">This email is sent with <a href="https://birdmailer.in/">Birdmailer.in</a>.</p>
-                        
-                    </div>
-                `,
+            <div>
+                ${message.replace(/\n/g, '<br>')}
+                <br>
+                <p style="font-size: small; color: gray;">This email is sent with <a href="https://birdmailer.in/">Birdmailer.in</a>.</p>
+            </div>
+            `,
+                text: `\n\nThis email is sent with Birdmailer.in.`,
             };
 
             let retries = 0;
@@ -282,7 +328,6 @@ app.post('/send-email', authenticateUser, async (req, res) => {
             // Add a delay after each email is sent
             await delay(500); // Delay in milliseconds (e.g., 500 ms = 0.5 seconds)
 
-
             // Once we reach the concurrency limit, wait for them to resolve before sending more
             if (emailPromises.length === concurrencyLimit) {
                 await Promise.all(emailPromises); // Wait for the batch to complete
@@ -299,12 +344,23 @@ app.post('/send-email', authenticateUser, async (req, res) => {
         user.emailsSentToday.count += to.length; // Increment by the number of recipients
         await user.save(); // Save user to update count
 
+        isSendingEmails = false; // Mark the process as complete
         res.status(200).json({ message: 'All emails sent successfully!' });
     } catch (error) {
         console.error(`Error sending emails: ${error.message}`);
+        isSendingEmails = false; // Reset in case of failure
         res.status(500).json({ message: 'Error sending emails.', error: error.message });
     }
 });
+
+// GET route to check email sending status
+app.get('/email-status', (req, res) => {
+    if (isSendingEmails) {
+        return res.json({ status: 'sending' });
+    }
+    return res.json({ status: 'idle' });
+});
+
 // Express API endpoint
 app.get('/api/smtp-settings', authenticateUser, async (req, res) => {
     try {
@@ -343,12 +399,6 @@ app.get('/api/smtp-usage', authenticateUser, async (req, res) => {
     }
 });
 
-// WebSocket setup
-const server = app.listen(port, '0.0.0.0', () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
-
-const wss = new WebSocket.Server({ server });
 
 // Broadcast function to send messages to all connected clients
 const broadcast = (message) => {

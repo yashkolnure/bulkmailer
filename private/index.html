@@ -250,21 +250,18 @@
     </style>
 </head>
 <body>
-     <!-- Sidebar -->
-<div class="sidebar" id="sidebar">
-  <div style="display: flex; align-items: center; margin-bottom: 20px;">
-      <img src="/logo.png" alt="Bird Mailer Logo" style="width: 50px; height: auto; margin-right: 10px;"/> <!-- Add your logo here -->
-      <h2 style="color: var(--secondary-color); margin: 0;">birdmailer.in</h2>
-  </div>
-  <a id="welcome-message"></a>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <img src="/logo.png" alt="Bird Mailer Logo" style="width: 50px; height: auto; margin-right: 10px;" /> <!-- Add your logo here -->
+            <h2 style="color: var(--secondary-color); margin: 0;">birdmailer.in</h2>
+        </div>
+        <a id="welcome-message"></a>
 
-  <a href="#"><i class="fas fa-envelope"></i> Send Emails</a>
-  <a href="#" id="smtp-settings-btn"><i class="fas fa-cogs"></i> SMTP Settings</a>
-  <!--<a href="#"><i class="fas fa-file-alt"></i> Templates</a>
-  <a href="#"><i class="fas fa-chart-line"></i> Reports</a>
-  <a href="#"><i class="fas fa-user-cog"></i> Settings</a>-->
-  <a href="#" class="btn-logout" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</a>
-</div>
+        <a href="#"><i class="fas fa-envelope"></i> Send Emails</a>
+        <a href="#" id="smtp-settings-btn"><i class="fas fa-cogs"></i> SMTP Settings</a>
+        <a href="#" class="btn-logout" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
 
     <!-- Main Content Container -->
     <div class="container">
@@ -293,248 +290,246 @@
                 <textarea id="message" name="message" placeholder="Type your message here..." required></textarea>
 
                 <button id="sendButton" type="submit">Send Emails</button>
-      <div id="countdown"></div>
-      <div id="statusDiv"></div>
-                <div id="sendResult"></div>
+               
             </form>
         </div>
 
-       <!-- Reports Section -->
-<div class="card" id="smtp-usage">
-  <h2><i class="fas fa-chart-pie"></i> SMTP Usage</h2>
-  <p id="smtp-connections">SMTP Connections: Loading...</p>
-  <p id="emails-sent">Emails Sent: Loading...</p>
-  <progress id="usage-progress" max="2000" value="0"></progress>
-</div>
+        <!-- Reports Section -->
+        <div class="card" id="smtp-usage">
+            <h2><i class="fas fa-chart-pie"></i> SMTP Usage</h2>
+            <p id="smtp-connections">SMTP Connections: Loading...</p>
+            <p id="emails-sent">Emails Sent: Loading...</p>
+            <progress id="usage-progress" max="2000" value="0"></progress>
+        </div>
         <div class="card">
-          <h2><i class="fas fa-envelope"></i> Emails Sent</h2>
-          <div id="result"></div>
+            <h2><i class="fas fa-envelope"></i> Emails Sent</h2>
+            <div id="result"></div>
         </div>
     </div>
 
-    
-  <!-- Include PapaParse for CSV parsing -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-<script src="app.js"></script>
+    <!-- Include PapaParse for CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="app.js"></script>
 
-<script>
-  async function fetchUserData() {
-      try {
-          const response = await fetch('/dashboard', {
-              method: 'GET',
-              credentials: 'include' // Include cookies for authentication
-          });
+    <script>
+        async function fetchUserData() {
+            try {
+                const response = await fetch('/dashboard', {
+                    method: 'GET',
+                    credentials: 'include' // Include cookies for authentication
+                });
 
-          if (response.ok) {
-              const data = await response.json();
-              document.getElementById('welcome-message').innerText = data.message;
-          } else {
-              // Handle error (e.g., redirect to login)
-              window.location.href = '/Index1.html';
-          }
-      } catch (error) {
-          console.error('Error fetching user data:', error);
-          // Handle error
-      }
-  }
-
-  // Call the function to fetch user data when the page loads
-  window.onload = fetchUserData;
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            // Fetch the SMTP usage data
-            const response = await fetch('/api/smtp-usage', {
-                method: 'GET',
-                credentials: 'include', // Ensure cookies are included for auth
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch SMTP usage data');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('welcome-message').innerText = data.message;
+                } else {
+                    // Handle error (e.g., redirect to login)
+                    window.location.href = '/Index1.html';
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                // Handle error
             }
-
-            const data = await response.json();
-
-            // Update the DOM with the fetched data
-            document.getElementById('smtp-connections').innerText = `SMTP Connections: ${data.smtpConnections}`;
-            document.getElementById('emails-sent').innerText = `Emails Sent: ${data.emailsSentToday}/${data.dailyLimit} today`;
-            document.getElementById('usage-progress').max = data.dailyLimit;
-            document.getElementById('usage-progress').value = data.emailsSentToday;
-
-        } catch (error) {
-            console.error('Error updating SMTP usage:', error);
-            // Handle error appropriately
-            document.getElementById('smtp-connections').innerText = 'Error fetching connections';
-            document.getElementById('emails-sent').innerText = 'Error fetching email data';
         }
-    });
-</script>
 
-<script>
-    // Script for fetching and displaying SMTP settings in a modal
-    document.getElementById('smtp-settings-btn').addEventListener('click', async (e) => {
-        e.preventDefault(); // Prevent default link behavior
-        console.log("SMTP Settings button clicked");
+        // Call the function to fetch user data when the page loads
+        window.onload = fetchUserData;
+    </script>
 
-        try {
-            const response = await fetch('/api/smtp-settings'); // Fetch SMTP settings from the backend
-            console.log("Response from API:", response);
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Fetch the SMTP usage data
+                const response = await fetch('/api/smtp-usage', {
+                    method: 'GET',
+                    credentials: 'include', // Ensure cookies are included for auth
+                });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch SMTP usage data');
+                }
+
+                const data = await response.json();
+
+                // Update the DOM with the fetched data
+                document.getElementById('smtp-connections').innerText = `SMTP Connections: ${data.smtpConnections}`;
+                document.getElementById('emails-sent').innerText = `Emails Sent: ${data.emailsSentToday}/${data.dailyLimit} today`;
+                document.getElementById('usage-progress').max = data.dailyLimit;
+                document.getElementById('usage-progress').value = data.emailsSentToday;
+
+            } catch (error) {
+                console.error('Error updating SMTP usage:', error);
+                // Handle error appropriately
+                document.getElementById('smtp-connections').innerText = 'Error fetching connections';
+                document.getElementById('emails-sent').innerText = 'Error fetching email data';
             }
-
-            const smtpDetails = await response.json(); // Convert response to JSON
-            console.log("SMTP Details:", smtpDetails);
-
-            // Display SMTP settings in the modal
-            const smtpDetailsDiv = document.getElementById('smtp-details');
-            smtpDetailsDiv.innerHTML = ''; // Clear previous content
-            smtpDetails.forEach(smtp => {
-                const detail = document.createElement('div');
-                detail.innerHTML = `
-                    <hr>
-                    <p><strong>Email:</strong> ${smtp.email}</p>
-                    <p><strong>Host:</strong> ${smtp.host}</p>
-                    <p><strong>Port:</strong> ${smtp.port}</p>
-                `;
-                smtpDetailsDiv.appendChild(detail);
-            });
-
-            // Show the modal
-            document.getElementById('smtp-modal').style.display = 'block';
-        } catch (error) {
-            console.error('Error fetching SMTP settings:', error);
-            alert('Failed to fetch SMTP settings. Please try again later.');
-        }
-    });
-</script>
-
-<script>
-    // Email form submission logic
-    const emailForm = document.getElementById('emailForm');
-    const sendButton = document.getElementById('sendButton');
-    const countdownDisplay = document.getElementById('countdown');
-
-    emailForm.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent default form submission
-
-        // Disable the button and show the countdown
-        sendButton.classList.add('disabled');
-        sendButton.disabled = true;
-
-        let remainingTime = 600; // 600 seconds countdown
-        
-        // Simulate email sending or perform the main functionality here
-        console.log('Emails sent!'); // Replace this with actual email sending logic
-        broadcast(`Email sent to: ${to[i]}`);
-    });
-
-    // Status display when sending emails
-    document.getElementById('sendButton').addEventListener('click', function() {
-        document.getElementById('statusDiv').innerText = 'Emails sending............';
-    });
-</script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-      // Close modal when the close button is clicked
-      document.querySelector('.close-btn').addEventListener('click', function() {
-          document.getElementById('smtp-modal').style.display = 'none';
-      });
-
-      // Close modal when clicking outside the modal content
-      window.addEventListener('click', function(event) {
-          const modal = document.getElementById('smtp-modal');
-          if (event.target === modal) {
-              modal.style.display = 'none';
-          }
-      });
-  });
-
-
-  document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        const response = await fetch('/api/username', {
-            method: 'GET',
-            credentials: 'include', // Ensure cookies are included for auth
         });
+    </script>
 
-        if (!response.ok) {
-            throw new Error('Failed to fetch username');
-        }
+    <script>
+        // Script for fetching and displaying SMTP settings in a modal
+        document.getElementById('smtp-settings-btn').addEventListener('click', async (e) => {
+            e.preventDefault(); // Prevent default link behavior
+            console.log("SMTP Settings button clicked");
 
-        const data = await response.json();
-        document.getElementById('username').textContent = data.username; // Set the username
+            try {
+                const response = await fetch('/api/smtp-settings'); // Fetch SMTP settings from the backend
+                console.log("Response from API:", response);
 
-        // Fetch SMTP usage data as before
-        const smtpResponse = await fetch('/api/smtp-usage', {
-            method: 'GET',
-            credentials: 'include',
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const smtpDetails = await response.json(); // Convert response to JSON
+                console.log("SMTP Details:", smtpDetails);
+
+                // Display SMTP settings in the modal
+                const smtpDetailsDiv = document.getElementById('smtp-details');
+                smtpDetailsDiv.innerHTML = ''; // Clear previous content
+                smtpDetails.forEach(smtp => {
+                    const detail = document.createElement('div');
+                    detail.innerHTML = `
+                        <hr>
+                        <p><strong>Email:</strong> ${smtp.email}</p>
+                        <p><strong>Host:</strong> ${smtp.host}</p>
+                        <p><strong>Port:</strong> ${smtp.port}</p>
+                    `;
+                    smtpDetailsDiv.appendChild(detail);
+                });
+
+                // Show the modal
+                document.getElementById('smtp-modal').style.display = 'block';
+            } catch (error) {
+                console.error('Error fetching SMTP settings:', error);
+                alert('Failed to fetch SMTP settings. Please try again later.');
+            }
         });
+    </script>
+    <script>
+        // Determine the WebSocket port
+const port = 4000; // Replace this with your WebSocket port if different
 
-        if (!smtpResponse.ok) {
-            throw new Error('Failed to fetch SMTP usage data');
-        }
+// Check if we are in production or development
+const isProduction = window.location.hostname !== 'localhost';
 
-        const smtpData = await smtpResponse.json();
-        document.getElementById('smtp-connections').innerText = `SMTP Connections: ${smtpData.smtpConnections}`;
-        document.getElementById('emails-sent').innerText = `Emails Sent: ${smtpData.emailsSentToday}/${smtpData.dailyLimit} today`;
-        document.getElementById('usage-progress').max = smtpData.dailyLimit;
-        document.getElementById('usage-progress').value = smtpData.emailsSentToday;
+// Create the WebSocket URL
+const wsUrl = isProduction ? `wss://${window.location.hostname}:${port}/` : `ws://localhost:${port}/`;
 
-    } catch (error) {
-        console.error('Error fetching username or SMTP usage:', error);
-        document.getElementById('username').textContent = 'Guest'; // Fallback if error occurs
-    }
+// Create a WebSocket connection
+const socket = new WebSocket(wsUrl);
+
+// Handle the open event (when the connection is established)
+socket.addEventListener('open', function (event) {
+    console.log('Connected to the WebSocket server!');
+    socket.send('Hello Server!'); // Send a message to the server
 });
 
+// Handle incoming messages from the server
+socket.addEventListener('message', function (event) {
+    console.log('Received:', event.data); // Log received messages
+});
 
-</script>
+// Handle errors that occur
+socket.addEventListener('error', function (event) {
+    console.error('WebSocket error:', event);
+});
 
+// Handle the close event (when the connection is closed)
+socket.addEventListener('close', function (event) {
+    console.log('WebSocket is closed:', event);
+});
 
-<script>
-    // Sidebar toggle for mobile view
-    const toggle = document.getElementById("toggle");
-    const sidebar = document.getElementById("sidebar");
+    </script>
 
-    toggle.addEventListener("change", function() {
-        if (this.checked) {
-            sidebar.classList.add("active");
-        } else {
-            sidebar.classList.remove("active");
-        }
-    });
-</script>
-
-<script>
-    // Logout functionality
-    document.getElementById('logoutButton').addEventListener('click', async (event) => {
-        event.preventDefault(); // Prevent default button action
-        const response = await fetch('/logout', { method: 'GET', credentials: 'include' });
+    <script>
+        // Email form submission logic
+        const emailForm = document.getElementById('emailForm');
+        const sendButton = document.getElementById('sendButton');
         
-        if (response.ok) {
-            window.location.href = '/login.html'; // Redirect to login page after logout
-        } else {
-            const errorText = await response.text(); // Get error text if any
-            console.error('Logout failed:', errorText); // Log the error for debugging
-            alert('Error logging out: ' + errorText); // Display the error
-        }
-    });
-</script>
+        emailForm.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent default form submission
 
-<!-- Modal structure -->
-<div id="smtp-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <h2>Your SMTP Settings</h2>
-        <div id="smtp-details">
-            <!-- SMTP details will be populated here -->
-        </div>
-    </div>
-</div>
+            // Disable the button and show the sending status
+            sendButton.classList.add('disabled');
+            sendButton.disabled = true;
+            document.getElementById('sendResult').innerText = 'Emails are being sent...';
 
+            const formData = new FormData(emailForm);
+
+            try {
+                const response = await fetch('/send-email', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include' // Ensure cookies are included for auth
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    document.getElementById('sendResult').innerText = result.message;
+                } else {
+                    const error = await response.json();
+                    document.getElementById('sendResult').innerText = 'Error: ' + error.message;
+                }
+            } catch (error) {
+                console.error('Error sending emails:', error);
+                document.getElementById('sendResult').innerText = 'Error sending emails.';
+            } finally {
+                sendButton.disabled = false; // Re-enable the button after processing
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Close modal when the close button is clicked
+            document.querySelector('.close-btn').addEventListener('click', function() {
+                document.getElementById('smtp-modal').style.display = 'none';
+            });
+
+            // Close modal when clicking outside the modal content
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('smtp-modal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/api/username', {
+                    method: 'GET',
+                    credentials: 'include', // Ensure cookies are included for auth
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch username');
+                }
+
+                const data = await response.json();
+                document.getElementById('username').textContent = data.username; // Set the username
+
+                // Fetch SMTP usage data as before
+                const smtpResponse = await fetch('/api/smtp-usage', {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+
+                if (!smtpResponse.ok) {
+                    throw new Error('Failed to fetch SMTP usage data');
+                }
+
+                const smtpData = await smtpResponse.json();
+                document.getElementById('smtp-connections').innerText = `SMTP Connections: ${smtpData.smtpConnections}`;
+                document.getElementById('emails-sent').innerText = `Emails Sent: ${smtpData.emailsSentToday}/${smtpData.dailyLimit} today`;
+                document.getElementById('usage-progress').max = smtpData.dailyLimit;
+                document.getElementById('usage-progress').value = smtpData.emailsSentToday;
+
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+            }
+        });
+    </script>
 </body>
 
 </html>
