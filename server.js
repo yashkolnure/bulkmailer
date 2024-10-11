@@ -11,6 +11,7 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const cors = require('cors');
+const io = require('socket.io')(httpServer);
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -47,6 +48,16 @@ const authenticateUser = (req, res, next) => {
         return res.redirect('/Index1.html'); // Redirect to login if token verification fails
     }
 };
+
+
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on('someEvent', (data) => {
+        // Handle event and emit updates to clients
+        io.emit('emailStatus', { message: 'Email sent successfully' });
+    });
+});
 
 
 // Dashboard route (protected)
