@@ -536,6 +536,16 @@
         </div>
     </div>
 </div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io(); // Initialize Socket.IO
+
+// Listen for email status updates
+socket.on('emailStatus', (data) => {
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML += `<p>${data.message}</p>`; // Append the message to the result div
+});
+</script>
 
 </body>
 

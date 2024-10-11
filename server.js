@@ -266,6 +266,7 @@ app.post('/send-email', authenticateUser, async (req, res) => {
                 try {
                     await sendEmail(transporter, mailOptions);
                     broadcast(`Email sent to: ${recipient}`);
+                    io.emit('emailStatus', { message: `Sending email to ${recipient}` });
                     emailSent = true;
                 } catch (error) {
                     retries++;
