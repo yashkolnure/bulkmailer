@@ -34,7 +34,8 @@ document.getElementById('emailForm').addEventListener('submit', async (event) =>
 });
 
 // WebSocket client setup
-const socket = new WebSocket('ws://localhost:3001');
+const socket = new WebSocket('wss://birdmailer.in');
+
 
 // When a new WebSocket message is received
 socket.onmessage = (event) => {
