@@ -320,6 +320,11 @@ app.get('/api/smtp-settings', authenticateUser, async (req, res) => {
 });
 
 
+// Route to serve templates.html
+app.get('/templates', (req, res) => {
+    res.sendFile(path.join(__dirname, 'private', 'templates.html'));
+});
+
 // Endpoint to get SMTP usage data for the authenticated user
 app.get('/api/smtp-usage', authenticateUser, async (req, res) => {
     try {
