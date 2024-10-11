@@ -31,6 +31,7 @@ mongoose.connect(mongoUri)
         run(); // Call your run function to fetch data or perform other initializations
     })
     .catch(err => console.error('Failed to connect to MongoDB', err));
+    
 
 // JWT Authentication Middleware
 const authenticateUser = (req, res, next) => {

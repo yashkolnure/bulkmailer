@@ -30,7 +30,7 @@
         .navbar {
             background-color: var(--primary-color-light);
             padding: 10px 20px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             display: flex;
             border-radius: 10px 10px 10px 10px;
             justify-content: space-between;
@@ -68,6 +68,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            width: 84%;
         }
 
         .sidebar a:hover {
@@ -254,16 +255,18 @@
      <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
   <div style="display: flex; align-items: center; margin-bottom: 20px;">
-      <img src="/logo.png" alt="Bird Mailer Logo" style="width: 50px; height: auto; margin-right: 10px;"/> <!-- Add your logo here -->
+      <img src="/logo.png" alt="Bird Mailer Logo" style="width: 50px; height: auto; margin-right: 10px; border-radius:8px"/> <!-- Add your logo here -->
       <h2 style="color: var(--secondary-color); margin: 0;">birdmailer.in</h2>
   </div>
   <a id="welcome-message"></a>
 
   <a href="#"><i class="fas fa-envelope"></i> Send Emails</a>
+
   <a href="#" id="smtp-settings-btn"><i class="fas fa-cogs"></i> SMTP Settings</a>
   <!--<a href="#"><i class="fas fa-file-alt"></i> Templates</a>
   <a href="#"><i class="fas fa-chart-line"></i> Reports</a>
   <a href="#"><i class="fas fa-user-cog"></i> Settings</a>-->
+  <a href="https://blog.birdmailer.in"><i class="fas fa-blog"></i> Blog</a>
   <a href="#" class="btn-logout" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</a>
 </div>
 
