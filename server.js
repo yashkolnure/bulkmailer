@@ -11,7 +11,6 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const cors = require('cors');
-const io = require('socket.io')(httpServer);
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -48,16 +47,6 @@ const authenticateUser = (req, res, next) => {
         return res.redirect('/Index1.html'); // Redirect to login if token verification fails
     }
 };
-
-
-io.on('connection', (socket) => {
-    console.log('A user connected');
-
-    socket.on('someEvent', (data) => {
-        // Handle event and emit updates to clients
-        io.emit('emailStatus', { message: 'Email sent successfully' });
-    });
-});
 
 
 // Dashboard route (protected)
@@ -201,6 +190,28 @@ app.post('/send-email-admin', async (req, res) => {
     }
 });
 
+
+let clients = [];
+
+// Function to broadcast email sending progress to all connected clients
+function broadcast(message) {
+    clients.forEach(client => client.write(`data: ${message}\n\n`));
+}
+
+// SSE endpoint to listen for email sending updates
+app.get('/email-status', (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    clients.push(res); // Add the client to the list
+
+    req.on('close', () => {
+        clients = clients.filter(client => client !== res); // Remove client on disconnect
+    });
+});
+
+
 // POST route to send emails
 app.post('/send-email', authenticateUser, async (req, res) => {
     const { to, subject, message } = req.body;
@@ -266,7 +277,6 @@ app.post('/send-email', authenticateUser, async (req, res) => {
                 try {
                     await sendEmail(transporter, mailOptions);
                     broadcast(`Email sent to: ${recipient}`);
-                    io.emit('emailStatus', { message: `Sending email to ${recipient}` });
                     emailSent = true;
                 } catch (error) {
                     retries++;
@@ -364,27 +374,6 @@ app.get('/api/smtp-usage', authenticateUser, async (req, res) => {
 const server = app.listen(port, '0.0.0.0', () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
-
-const wss = new WebSocket.Server({ server });
-
-// Broadcast function to send messages to all connected clients
-const broadcast = (message) => {
-    wss.clients.forEach(client => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(message);
-        }
-    });
-};
-
-// WebSocket example
-wss.on('connection', (ws) => {
-    console.log('Client connected');
-    ws.on('message', (message) => {
-        console.log(`Received: ${message}`);
-        broadcast(`Server: ${message}`); // Echo message back to all clients
-    });
-});
-
 
 
 // Run function to perform initial actions

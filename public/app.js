@@ -34,14 +34,7 @@ document.getElementById('emailForm').addEventListener('submit', async (event) =>
 });
 
 // WebSocket client setup
-const socket = new WebSocket('wss://birdmailer.in/socket.io/');
-
-
-// When a new WebSocket message is received
-socket.onmessage = (event) => {
-  const resultDiv = document.getElementById('result');
-  resultDiv.innerHTML += `<span>${event.data}</span><br>`;
-};
+const socket = new WebSocket('ws://localhost:3000');
 
 // Handle CSV File Upload and Parse
 document.getElementById('csvFile').addEventListener('change', handleFileUpload);

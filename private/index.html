@@ -308,16 +308,32 @@
   <progress id="usage-progress" max="2000" value="0"></progress>
 </div>
 -->
-        <div class="card">
-          <h2><i class="fas fa-envelope"></i> Emails Sent</h2>
-          <div id="result"></div>
-        </div>
+<div class="card">
+    <h2><i class="fas fa-envelope"></i> Emails Sent</h2>
+    <div id="result"></div>
+  </div>
+  
     </div>
 
     
   <!-- Include PapaParse for CSV parsing -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 <script src="app.js"></script>
+<script>
+    const eventSource = new EventSource('/email-status');
+
+    // Listen for messages from the server
+    eventSource.onmessage = function(event) {
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML += `<p>${event.data}</p>`; // Append the message to the result div
+    };
+
+    eventSource.onerror = function(event) {
+        console.error("Error with SSE:", event);
+        eventSource.close(); // Optionally close the connection
+    };
+</script>
+
 
 <script>
   async function fetchUserData() {
@@ -526,6 +542,7 @@
     });
 </script>
 
+
 <!-- Modal structure -->
 <div id="smtp-modal" class="modal">
     <div class="modal-content">
@@ -536,17 +553,6 @@
         </div>
     </div>
 </div>
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    const socket = io(); // Initialize Socket.IO
-
-// Listen for email status updates
-socket.on('emailStatus', (data) => {
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML += `<p>${data.message}</p>`; // Append the message to the result div
-});
-</script>
-
 </body>
 
 </html>
