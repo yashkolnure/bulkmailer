@@ -34,7 +34,7 @@ document.getElementById('emailForm').addEventListener('submit', async (event) =>
 });
 
 // WebSocket client setup
-const socket = new WebSocket('ws://localhost:3000');
+const socket = new WebSocket('ws://localhost:3001');
 
 // When a new WebSocket message is received
 socket.onmessage = (event) => {
