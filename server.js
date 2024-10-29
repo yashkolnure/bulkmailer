@@ -13,6 +13,8 @@ require('dotenv').config();
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const cors = require('cors');
 const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const socketIo = require('socket.io');
 
 
@@ -43,13 +45,22 @@ mongoose.connect(mongoUri)
     });
     
 
+
+
     const io = require("socket.io")(server, {
         cors: {
             origin: "https://birdmailer.fun",
             methods: ["GET", "POST"]
         }
     });
-    
+    // Socket.IO connection handling
+io.on('connection', (socket) => {
+    console.log('New client connected');
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
+});
 
 // Set up multer for file uploads
 const storage = multer.diskStorage({
@@ -227,7 +238,7 @@ let clients = [];
 
 // Function to broadcast email sending progress to all connected clients
 function broadcast(message) {
-    clients.forEach(client => client.write(`data: ${message}\n\n`));
+    io.emit('emailUpdate', message); 
 }
 
 // SSE endpoint to listen for email sending updates
