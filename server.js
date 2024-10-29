@@ -12,10 +12,14 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const cors = require('cors');
+const http = require('http');
+const socketIo = require('socket.io');
+
 
 const app = express();
 const port = process.env.PORT || 3000;
 const mongoUri = process.env.MONGO_URI;
+const server = http.createServer(app); // Create an HTTP serve
 
 // Middleware
 app.use(bodyParser.json({ limit: '100mb' })); // Adjust the limit based on your needs
@@ -39,6 +43,13 @@ mongoose.connect(mongoUri)
     });
     
 
+    const io = require("socket.io")(server, {
+        cors: {
+            origin: "https://birdmailer.fun",
+            methods: ["GET", "POST"]
+        }
+    });
+    
 
 // Set up multer for file uploads
 const storage = multer.diskStorage({
@@ -408,6 +419,8 @@ async function run() {
     }
 }
 // WebSocket setup
-const server = app.listen(port, '0.0.0.0', () => {
-    console.log(`Server is running on http://localhost:${port}`);
+
+const PORT = process.env.PORT || 3000; // Define the port
+server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
