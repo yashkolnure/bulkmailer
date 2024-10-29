@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Birdmailer.in</title>
+    <link rel="icon" href="birdmailer.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <style>
+
+
+
+:root {
+  --primary-color: #111317;
+  --primary-color-light: #1f2125;
+  --primary-color-extra-light: #35373b;
+  --secondary-color: #f9ac54;
+  --secondary-color-dark: #d79447;
+  --text-light: #d1d5db;
+  --white: #ffffff;
+  --max-width: 1200px;
+}
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: auto;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow: auto;
+          background-color: #111317;
+            background-size: 400% 400%;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 0%;
+            }
+            50% {
+                background-position: 100% 100%;
+            }
+            100% {
+                background-position: 0% 0%;
+            }
+        }
+
+        .register-container {
+            background: white;
+            padding: 2em;
+            border-radius: 12px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 1.5em;
+            color: #333;
+            font-size: 1.8em;
+        }
+
+        h4 {
+            margin-bottom: 0.2em;
+            text-align: left;
+            margin-left: 0.6em;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 1em;
+            border: 4px solid #007bff;
+            object-fit: cover;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1em;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #878787;
+            border-radius: 25px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            background: white;
+            margin: 0;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        label {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 15px;
+    transform: translateY(-50%); /* Center adjustment */
+    color: #aaa;
+    transition: 0.2s ease all;
+    pointer-events: none; /* Prevents clicking on the label */
+    font-size: 1em; /* Normal font size */
+    background: white; /* Set background to white */
+    padding: 0 5px; /* Horizontal padding */
+}
+
+input:focus + label,
+input:not(:placeholder-shown) + label {
+    top: 5px; /* Adjust this value to move the label higher */
+    left: 10px; /* Adjust horizontal position */
+    font-size: 0.8em; /* Smaller font size */
+    color: #007bff; /* Change color on focus */
+    background: white; /* Keep background white */
+}
+
+
+        button {
+            width: 100%;
+            padding: 0.7em;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        button:hover:enabled {
+            background-color: #0056b3;
+        }
+
+        p {
+            margin-top: 1em;
+            font-size: 0.9em;
+        }
+
+        p a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        p a:hover {
+            text-decoration: underline;
+        }
+
+        h3 {
+            margin-top: 1.5em;
+            color: #333;
+            font-size: 1.4em;
+        }
+        h2 {
+    margin-top: 1rem;
+    margin-bottom: 0.5em;
+    color: #333;
+}
+
+        .line {
+            margin: 1em 0;
+            border-top: 1px solid #ccc;
+        }
+
+        .copyright {
+            margin-top: 1.5em;
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .copyrigh {
+            margin-top: 0.2em;
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        a {
+            color: #007bff; /* Change this to your desired color */
+        }
+        .bg__blur {
+  position: absolute;
+  box-shadow: 0 0 1000px 50px var(--secondary-color);
+  z-index: -1;
+}
+.header__blur {
+  bottom: 5rem;
+  right: 2rem;
+}
+
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        
+        <span class="bg__blur"></span>
+        <span class="bg__blur header__blur"></span>
+        <img src="/logo.png" alt="Logo" class="logo">
+        <h2>Create Your Account!</h2>
+        <form id="registerForm">
+            <div class="input-group">
+                <input type="text" id="username" name="username" required placeholder=" ">
+                <label for="username">Username</label>
+            </div>
+            <div class="input-group">
+                <input type="email" id="email" name="email" required placeholder=" ">
+                <label for="email">Email</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" name="password" required placeholder=" " minlength="6">
+                <label for="password">Password</label>
+            </div>
+
+            <h3>SMTP Credentials</h3>
+            
+            <div> <br></div>
+            <h4>SMTP 1</h4>
+            <div class="input-group">
+                <input type="email" id="smtpmail1" name="smtpmail1" required placeholder=" ">
+                <label for="smtpmail1">SMTP Email 1</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="smtppass1" name="smtppass1" required placeholder=" ">
+                <label for="smtppass1">SMTP Password 1</label>
+            </div>
+            <div class="input-group">
+                <input type="number" id="smtpport1" name="smtpport1" required placeholder=" ">
+                <label for="smtpport1">SMTP Port 1</label>
+            </div>
+            
+        <span class="bg__blur"></span>
+        <span class="bg__blur header__blur"></span>
+            <div class="input-group">
+                <input type="text" id="smtphost1" name="smtphost1" required placeholder=" ">
+                <label for="smtphost1">SMTP Host 1</label>
+            </div>
+            <h4>SMTP 2</h4>
+            <div class="input-group">
+                <input type="email" id="smtpmail2" name="smtpmail2" required placeholder=" ">
+                <label for="smtpmail2">SMTP Email 2</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="smtppass2" name="smtppass2" required placeholder=" ">
+                <label for="smtppass2">SMTP Password 2</label>
+            </div>
+            <div class="input-group">
+                <input type="number" id="smtpport2" name="smtpport2" required placeholder=" ">
+                <label for="smtpport2">SMTP Port 2</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="smtphost2" name="smtphost2" required placeholder=" ">
+                <label for="smtphost2">SMTP Host 2</label>
+            </div>
+            <h4>SMTP 3</h4>
+            <div class="input-group">
+                <input type="email" id="smtpmail3" name="smtpmail3" required placeholder=" ">
+                <label for="smtpmail3">SMTP Email 3</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="smtppass3" name="smtppass3" required placeholder=" ">
+                <label for="smtppass3">SMTP Password 3</label>
+            </div>
+            <div class="input-group">
+                <input type="number" id="smtpport3" name="smtpport3" required placeholder=" ">
+                <label for="smtpport3">SMTP Port 3</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="smtphost3" name="smtphost3" required placeholder=" ">
+                <label for="smtphost3">SMTP Host 3</label>
+            </div>
+            <h4>SMTP 4</h4>
+            <div class="input-group">
+                <input type="email" id="smtpmail4" name="smtpmail4" required placeholder=" ">
+                <label for="smtpmail4">SMTP Email 4</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="smtppass4" name="smtppass4" required placeholder=" ">
+                <label for="smtppass4">SMTP Password 4</label>
+            </div>
+            <div class="input-group">
+                <input type="number" id="smtpport4" name="smtpport4" required placeholder=" ">
+                <label for="smtpport4">SMTP Port 4</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="smtphost4" name="smtphost4" required placeholder=" ">
+                <label for="smtphost4">SMTP Host 4</label>
+            </div>
+            <h4>SMTP 5</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail5" name="smtpmail5" required placeholder=" ">
+    <label for="smtpmail5">SMTP Email 5</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass5" name="smtppass5" required placeholder=" ">
+    <label for="smtppass5">SMTP Password 5</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport5" name="smtpport5" required placeholder=" ">
+    <label for="smtpport5">SMTP Port 5</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost5" name="smtphost5" required placeholder=" ">
+    <label for="smtphost5">SMTP Host 5</label>
+</div>
+
+<h4>SMTP 6</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail6" name="smtpmail6" required placeholder=" ">
+    <label for="smtpmail6">SMTP Email 6</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass6" name="smtppass6" required placeholder=" ">
+    <label for="smtppass6">SMTP Password 6</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport6" name="smtpport6" required placeholder=" ">
+    <label for="smtpport6">SMTP Port 6</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost6" name="smtphost6" required placeholder=" ">
+    <label for="smtphost6">SMTP Host 6</label>
+</div>
+
+<h4>SMTP 7</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail7" name="smtpmail7" required placeholder=" ">
+    <label for="smtpmail7">SMTP Email 7</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass7" name="smtppass7" required placeholder=" ">
+    <label for="smtppass7">SMTP Password 7</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport7" name="smtpport7" required placeholder=" ">
+    <label for="smtpport7">SMTP Port 7</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost7" name="smtphost7" required placeholder=" ">
+    <label for="smtphost7">SMTP Host 7</label>
+</div>
+
+<h4>SMTP 8</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail8" name="smtpmail8" required placeholder=" ">
+    <label for="smtpmail8">SMTP Email 8</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass8" name="smtppass8" required placeholder=" ">
+    <label for="smtppass8">SMTP Password 8</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport8" name="smtpport8" required placeholder=" ">
+    <label for="smtpport8">SMTP Port 8</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost8" name="smtphost8" required placeholder=" ">
+    <label for="smtphost8">SMTP Host 8</label>
+</div>
+
+<h4>SMTP 9</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail9" name="smtpmail9" required placeholder=" ">
+    <label for="smtpmail9">SMTP Email 9</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass9" name="smtppass9" required placeholder=" ">
+    <label for="smtppass9">SMTP Password 9</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport9" name="smtpport9" required placeholder=" ">
+    <label for="smtpport9">SMTP Port 9</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost9" name="smtphost9" required placeholder=" ">
+    <label for="smtphost9">SMTP Host 9</label>
+</div>
+
+<h4>SMTP 10</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail10" name="smtpmail10" required placeholder=" ">
+    <label for="smtpmail10">SMTP Email 10</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass10" name="smtppass10" required placeholder=" ">
+    <label for="smtppass10">SMTP Password 10</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport10" name="smtpport10" required placeholder=" ">
+    <label for="smtpport10">SMTP Port 10</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost10" name="smtphost10" required placeholder=" ">
+    <label for="smtphost10">SMTP Host 10</label>
+</div>
+
+<h4>SMTP 11</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail11" name="smtpmail11" required placeholder=" ">
+    <label for="smtpmail11">SMTP Email 11</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass11" name="smtppass11" required placeholder=" ">
+    <label for="smtppass11">SMTP Password 11</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport11" name="smtpport11" required placeholder=" ">
+    <label for="smtpport11">SMTP Port 11</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost11" name="smtphost11" required placeholder=" ">
+    <label for="smtphost11">SMTP Host 11</label>
+</div>
+
+<h4>SMTP 12</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail12" name="smtpmail12" required placeholder=" ">
+    <label for="smtpmail12">SMTP Email 12</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass12" name="smtppass12" required placeholder=" ">
+    <label for="smtppass12">SMTP Password 12</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport12" name="smtpport12" required placeholder=" ">
+    <label for="smtpport12">SMTP Port 12</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost12" name="smtphost12" required placeholder=" ">
+    <label for="smtphost12">SMTP Host 12</label>
+</div>
+
+<h4>SMTP 13</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail13" name="smtpmail13" required placeholder=" ">
+    <label for="smtpmail13">SMTP Email 13</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass13" name="smtppass13" required placeholder=" ">
+    <label for="smtppass13">SMTP Password 13</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport13" name="smtpport13" required placeholder=" ">
+    <label for="smtpport13">SMTP Port 13</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost13" name="smtphost13" required placeholder=" ">
+    <label for="smtphost13">SMTP Host 13</label>
+</div>
+
+<h4>SMTP 14</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail14" name="smtpmail14" required placeholder=" ">
+    <label for="smtpmail14">SMTP Email 14</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass14" name="smtppass14" required placeholder=" ">
+    <label for="smtppass14">SMTP Password 14</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport14" name="smtpport14" required placeholder=" ">
+    <label for="smtpport14">SMTP Port 14</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost14" name="smtphost14" required placeholder=" ">
+    <label for="smtphost14">SMTP Host 14</label>
+</div>
+
+<h4>SMTP 15</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail15" name="smtpmail15" required placeholder=" ">
+    <label for="smtpmail15">SMTP Email 15</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass15" name="smtppass15" required placeholder=" ">
+    <label for="smtppass15">SMTP Password 15</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport15" name="smtpport15" required placeholder=" ">
+    <label for="smtpport15">SMTP Port 15</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost15" name="smtphost15" required placeholder=" ">
+    <label for="smtphost15">SMTP Host 15</label>
+</div>
+
+<h4>SMTP 16</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail16" name="smtpmail16" required placeholder=" ">
+    <label for="smtpmail16">SMTP Email 16</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass16" name="smtppass16" required placeholder=" ">
+    <label for="smtppass16">SMTP Password 16</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport16" name="smtpport16" required placeholder=" ">
+    <label for="smtpport16">SMTP Port 16</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost16" name="smtphost16" required placeholder=" ">
+    <label for="smtphost16">SMTP Host 16</label>
+</div>
+
+<h4>SMTP 17</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail17" name="smtpmail17" required placeholder=" ">
+    <label for="smtpmail17">SMTP Email 17</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass17" name="smtppass17" required placeholder=" ">
+    <label for="smtppass17">SMTP Password 17</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport17" name="smtpport17" required placeholder=" ">
+    <label for="smtpport17">SMTP Port 17</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost17" name="smtphost17" required placeholder=" ">
+    <label for="smtphost17">SMTP Host 17</label>
+</div>
+
+<h4>SMTP 18</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail18" name="smtpmail18" required placeholder=" ">
+    <label for="smtpmail18">SMTP Email 18</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass18" name="smtppass18" required placeholder=" ">
+    <label for="smtppass18">SMTP Password 18</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport18" name="smtpport18" required placeholder=" ">
+    <label for="smtpport18">SMTP Port 18</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost18" name="smtphost18" required placeholder=" ">
+    <label for="smtphost18">SMTP Host 18</label>
+</div>
+
+<h4>SMTP 19</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail19" name="smtpmail19" required placeholder=" ">
+    <label for="smtpmail19">SMTP Email 19</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass19" name="smtppass19" required placeholder=" ">
+    <label for="smtppass19">SMTP Password 19</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport19" name="smtpport19" required placeholder=" ">
+    <label for="smtpport19">SMTP Port 19</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost19" name="smtphost19" required placeholder=" ">
+    <label for="smtphost19">SMTP Host 19</label>
+</div>
+
+<h4>SMTP 20</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail20" name="smtpmail20" required placeholder=" ">
+    <label for="smtpmail20">SMTP Email 20</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass20" name="smtppass20" required placeholder=" ">
+    <label for="smtppass20">SMTP Password 20</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport20" name="smtpport20" required placeholder=" ">
+    <label for="smtpport20">SMTP Port 20</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost20" name="smtphost20" required placeholder=" ">
+    <label for="smtphost20">SMTP Host 20</label>
+</div>
+
+<h4>SMTP 21</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail21" name="smtpmail21" required placeholder=" ">
+    <label for="smtpmail21">SMTP Email 21</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass21" name="smtppass21" required placeholder=" ">
+    <label for="smtppass21">SMTP Password 21</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport21" name="smtpport21" required placeholder=" ">
+    <label for="smtpport21">SMTP Port 21</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost21" name="smtphost21" required placeholder=" ">
+    <label for="smtphost21">SMTP Host 21</label>
+</div>
+
+<h4>SMTP 22</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail22" name="smtpmail22" required placeholder=" ">
+    <label for="smtpmail22">SMTP Email 22</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass22" name="smtppass22" required placeholder=" ">
+    <label for="smtppass22">SMTP Password 22</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport22" name="smtpport22" required placeholder=" ">
+    <label for="smtpport22">SMTP Port 22</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost22" name="smtphost22" required placeholder=" ">
+    <label for="smtphost22">SMTP Host 22</label>
+</div>
+
+<h4>SMTP 23</h4>
+<div class="input-group">
+    <input type="email" id="smtpmail23" name="smtpmail23" required placeholder=" ">
+    <label for="smtpmail23">SMTP Email 23</label>
+</div>
+<div class="input-group">
+    <input type="password" id="smtppass23" name="smtppass23" required placeholder=" ">
+    <label for="smtppass23">SMTP Password 23</label>
+</div>
+<div class="input-group">
+    <input type="number" id="smtpport23" name="smtpport23" required placeholder=" ">
+    <label for="smtpport23">SMTP Port 23</label>
+</div>
+<div class="input-group">
+    <input type="text" id="smtphost23" name="smtphost23" required placeholder=" ">
+    <label for="smtphost23">SMTP Host 23</label>
+</div>
+
+            <span class="bg__blur"></span>
+            <span class="bg__blur header__blur"></span>
+            <button type="submit" id="submitBtn">Register</button>
+        </form>
+        <p>Already have an account? <a href="login.html">Login here</a></p>
+        <div class="line"></div>
+        <p class="copyright">© 2024 Copyright Reserved</p>
+        <p class="copyrigh">Product of <a href="https://www.avenirya.com/">Avenirya Solutions OPC Private Limited</a></p>
+    </div>
+
+    
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent the form from submitting the default way
+
+            const formData = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                smtpCredentials: [
+                {
+        email: document.getElementById('smtpmail1').value,
+        password: document.getElementById('smtppass1').value,
+        port: document.getElementById('smtpport1').value,
+        host: document.getElementById('smtphost1').value,
+    },
+    {
+        email: document.getElementById('smtpmail2').value,
+        password: document.getElementById('smtppass2').value,
+        port: document.getElementById('smtpport2').value,
+        host: document.getElementById('smtphost2').value,
+    },
+    {
+        email: document.getElementById('smtpmail3').value,
+        password: document.getElementById('smtppass3').value,
+        port: document.getElementById('smtpport3').value,
+        host: document.getElementById('smtphost3').value,
+    },
+{
+    email: document.getElementById('smtpmail4').value,
+    password: document.getElementById('smtppass4').value,
+    port: document.getElementById('smtpport4').value,
+    host: document.getElementById('smtphost4').value,
+},
+{
+    email: document.getElementById('smtpmail5').value,
+    password: document.getElementById('smtppass5').value,
+    port: document.getElementById('smtpport5').value,
+    host: document.getElementById('smtphost5').value,
+},
+{
+    email: document.getElementById('smtpmail6').value,
+    password: document.getElementById('smtppass6').value,
+    port: document.getElementById('smtpport6').value,
+    host: document.getElementById('smtphost6').value,
+},
+{
+    email: document.getElementById('smtpmail7').value,
+    password: document.getElementById('smtppass7').value,
+    port: document.getElementById('smtpport7').value,
+    host: document.getElementById('smtphost7').value,
+},
+{
+    email: document.getElementById('smtpmail8').value,
+    password: document.getElementById('smtppass8').value,
+    port: document.getElementById('smtpport8').value,
+    host: document.getElementById('smtphost8').value,
+},
+{
+    email: document.getElementById('smtpmail9').value,
+    password: document.getElementById('smtppass9').value,
+    port: document.getElementById('smtpport9').value,
+    host: document.getElementById('smtphost9').value,
+},
+{
+    email: document.getElementById('smtpmail10').value,
+    password: document.getElementById('smtppass10').value,
+    port: document.getElementById('smtpport10').value,
+    host: document.getElementById('smtphost10').value,
+},
+{
+    email: document.getElementById('smtpmail11').value,
+    password: document.getElementById('smtppass11').value,
+    port: document.getElementById('smtpport11').value,
+    host: document.getElementById('smtphost11').value,
+},
+{
+    email: document.getElementById('smtpmail12').value,
+    password: document.getElementById('smtppass12').value,
+    port: document.getElementById('smtpport12').value,
+    host: document.getElementById('smtphost12').value,
+},
+{
+    email: document.getElementById('smtpmail13').value,
+    password: document.getElementById('smtppass13').value,
+    port: document.getElementById('smtpport13').value,
+    host: document.getElementById('smtphost13').value,
+},
+{
+    email: document.getElementById('smtpmail14').value,
+    password: document.getElementById('smtppass14').value,
+    port: document.getElementById('smtpport14').value,
+    host: document.getElementById('smtphost14').value,
+},
+{
+    email: document.getElementById('smtpmail15').value,
+    password: document.getElementById('smtppass15').value,
+    port: document.getElementById('smtpport15').value,
+    host: document.getElementById('smtphost15').value,
+},
+{
+    email: document.getElementById('smtpmail16').value,
+    password: document.getElementById('smtppass16').value,
+    port: document.getElementById('smtpport16').value,
+    host: document.getElementById('smtphost16').value,
+},
+{
+    email: document.getElementById('smtpmail17').value,
+    password: document.getElementById('smtppass17').value,
+    port: document.getElementById('smtpport17').value,
+    host: document.getElementById('smtphost17').value,
+},
+{
+    email: document.getElementById('smtpmail18').value,
+    password: document.getElementById('smtppass18').value,
+    port: document.getElementById('smtpport18').value,
+    host: document.getElementById('smtphost18').value,
+},
+{
+    email: document.getElementById('smtpmail19').value,
+    password: document.getElementById('smtppass19').value,
+    port: document.getElementById('smtpport19').value,
+    host: document.getElementById('smtphost19').value,
+},
+{
+    email: document.getElementById('smtpmail20').value,
+    password: document.getElementById('smtppass20').value,
+    port: document.getElementById('smtpport20').value,
+    host: document.getElementById('smtphost20').value,
+},
+{
+    email: document.getElementById('smtpmail21').value,
+    password: document.getElementById('smtppass21').value,
+    port: document.getElementById('smtpport21').value,
+    host: document.getElementById('smtphost21').value,
+},
+{
+    email: document.getElementById('smtpmail22').value,
+    password: document.getElementById('smtppass22').value,
+    port: document.getElementById('smtpport22').value,
+    host: document.getElementById('smtphost22').value,
+},
+{
+    email: document.getElementById('smtpmail23').value,
+    password: document.getElementById('smtppass23').value,
+    port: document.getElementById('smtpport23').value,
+    host: document.getElementById('smtphost23').value,
+}
+    
+                ],
+            };
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    alert('Registration successful!');
+                    window.location.href = '/login.html'; // Redirect to login page
+                } else {
+                    const errorText = await response.text();
+                    alert('Registration failed: ' + errorText);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Registration failed: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

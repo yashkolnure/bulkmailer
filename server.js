@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const multer = require('multer');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const path = require('path');
@@ -32,6 +33,24 @@ mongoose.connect(mongoUri)
     })
     .catch(err => console.error('Failed to connect to MongoDB', err));
     
+
+    app.get('/register1111', (req, res) => {
+        res.sendFile(path.join( 'public', 'register1111.html'));
+    });
+    
+
+
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); // Directory to save uploaded files
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname)); // Unique file name
+    }
+});
+
+const upload = multer({ storage: storage });
 
 // JWT Authentication Middleware
 const authenticateUser = (req, res, next) => {
@@ -164,6 +183,7 @@ const mailpassadmin = process.env.MAIL_PASS_ADMIN;
 // Endpoint to handle form submission
 app.post('/send-email-admin', async (req, res) => {
     const { name, email, message } = req.body;
+    
 
     try {
         const transporter = nodemailer.createTransport({
@@ -214,8 +234,10 @@ app.get('/email-status', (req, res) => {
 
 
 // POST route to send emails
-app.post('/send-email', authenticateUser, async (req, res) => {
+app.post('/send-email', authenticateUser, upload.single('attachment'), async (req, res) => {
     const { to, subject, message } = req.body;
+    const attachment = req.file; // Get the uploaded file
+    
 
     // Validate email recipients
     if (!to || !Array.isArray(to) || to.length === 0) {
@@ -263,12 +285,16 @@ app.post('/send-email', authenticateUser, async (req, res) => {
                 replyTo: user.email,
                 html: `
             <div>
-        ${message.replace(/\n/g, '<br>')}
-        <br>
+        ${message}
+        
         <p style="font-size: small; color: gray;">This email is sent with <a href="https://birdmailer.in/">Birdmailer.in</a>.</p>
     </div>
             `,
               text: `\n\nThis email is sent with Birdmailer.in.`,
+              attachments: attachment ? [{ // Only add the attachment if it exists
+                filename: attachment.originalname,
+                path: attachment.path
+            }] : []
             };
 
             let retries = 0;
@@ -343,11 +369,6 @@ app.get('/api/smtp-settings', authenticateUser, async (req, res) => {
 });
 
 
-// Route to serve templates.html
-app.get('/templates', (req, res) => {
-    res.sendFile(path.join(__dirname, 'private', 'templates.html'));
-});
-
 // Endpoint to get SMTP usage data for the authenticated user
 app.get('/api/smtp-usage', authenticateUser, async (req, res) => {
     try {
@@ -371,10 +392,6 @@ app.get('/api/smtp-usage', authenticateUser, async (req, res) => {
     }
 });
 
-// WebSocket setup
-const server = app.listen(port, '0.0.0.0', () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
 
 
 // Run function to perform initial actions
@@ -390,3 +407,7 @@ async function run() {
  
     }
 }
+// WebSocket setup
+const server = app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
