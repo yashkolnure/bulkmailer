@@ -35,13 +35,7 @@ document.getElementById('emailForm').addEventListener('submit', async (event) =>
 
 // WebSocket client setup
 const socket = new WebSocket('wss://localhost:3000');
-// Handle incoming messages from the server
-socket.on('emailUpdate', (message) => {
-  const updatesDiv = document.getElementById('updates');
-  const messageElement = document.createElement('p');
-  messageElement.textContent = message; // Display the broadcast message
-  updatesDiv.appendChild(messageElement);
-});
+
 // Handle CSV File Upload and Parse
 document.getElementById('csvFile').addEventListener('change', handleFileUpload);
 
