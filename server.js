@@ -2,14 +2,16 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
+const http = require('http'); // Import HTTP module
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const socketIo = require('socket.io'); // Import Socket.IO
 const path = require('path');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 const User = require('./models/user'); // Adjust the path as needed
 const WebSocket = require('ws');
 const cookieParser = require('cookie-parser');
-require('dotenv').config();
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const cors = require('cors');
 
@@ -25,6 +27,19 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.static('public')); // Serve static files from the 'public' folder
 
+
+const server = http.createServer(app);
+const io = socketIo(server); // Use socket.io on the server side
+
+// Handle socket connections
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    
+    // Handle specific events, e.g., sending live updates
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
 // MongoDB connection
 mongoose.connect(mongoUri)
     .then(() => {
@@ -407,7 +422,7 @@ async function run() {
  
     }
 }
-// WebSocket setup
-const server = app.listen(port, '0.0.0.0', () => {
-    console.log(`Server is running on http://localhost:${port}`);
+
+server.listen(port, () => {
+    console.log(`Server running on port ${port}`);
 });
