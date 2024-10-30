@@ -551,6 +551,27 @@
         console.log('Disconnected from Socket.IO server');
     });
 </script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    // Ensure this is defined in the correct scope
+    let socket;
+
+    // Initialize the socket connection once the DOM content is fully loaded
+    document.addEventListener("DOMContentLoaded", function() {
+        socket = io(); // Initialize the socket connection
+
+        // Listen for email status updates
+        socket.on('emailStatus', (message) => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML += `<p>${message}</p>`; // Append the message to the result div
+        });
+    });
+
+    // Function to send email request (example)
+    function sendEmail() {
+        socket.emit('sendEmail'); // Emit an event to send an email
+    }
+</script>
 <script>
     // Logout functionality
     document.getElementById('logoutButton').addEventListener('click', async (event) => {
