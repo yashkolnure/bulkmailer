@@ -29,17 +29,8 @@ app.use(express.static('public')); // Serve static files from the 'public' folde
 
 
 const server = http.createServer(app);
-const io = socketIo(server); // Use socket.io on the server side
-
 // Handle socket connections
-io.on('connection', (socket) => {
-    console.log('a user connected');
-    
-    // Handle specific events, e.g., sending live updates
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
-});
+
 // MongoDB connection
 mongoose.connect(mongoUri)
     .then(() => {
@@ -180,6 +171,7 @@ const sendEmail = async (transporter, mailOptions, retries = 1) => {
     try {
         await transporter.sendMail(mailOptions);
         console.log(`Email sent to: ${mailOptions.to}`);
+        io.emit('mailStatus', `Email sent to: ${mailOptions.to}`);
         return true; // Indicate success
     } catch (error) {
         console.error(`Error sending email to ${mailOptions.to}: ${error.message}`);
@@ -319,17 +311,20 @@ app.post('/send-email', authenticateUser, upload.single('attachment'), async (re
                 try {
                     await sendEmail(transporter, mailOptions);
                     broadcast(`Email sent to: ${recipient}`);
+                    socket.emit('emailStatus', `Email sent to: ${recipient}`);
                     emailSent = true;
                 } catch (error) {
                     retries++;
                     console.error(`Error sending email to ${recipient}: ${error.message}`);
                     broadcast(`Error sending email to ${recipient}: ${error.message}. Retrying... (${retries}/${maxRetries})`);
+                    socket.emit('emailStatus', `Error sending email to ${recipient}: ${error.message}. Retrying... (${retries}/${maxRetries})`);
                 }
             }
 
             if (!emailSent) {
                 console.error(`Failed to send email to ${recipient} after ${maxRetries} attempts. Skipping...`);
                 broadcast(`Failed to send email to ${recipient} after ${maxRetries} attempts. Skipping...`);
+                socket.emit('emailStatus', `Failed to send email to ${recipient} after ${maxRetries} attempts. Skipping...`); // Emit final failure
             }
         };
 
@@ -369,6 +364,31 @@ app.post('/send-email', authenticateUser, upload.single('attachment'), async (re
         res.status(500).json({ message: 'Error sending emails.', error: error.message });
     }
 });
+
+const io = require('socket.io')(server); // Ensure you have your server instance
+io.on('connection', (socket) => {
+    // Your socket event listeners go here
+    socket.on('sendEmail', () => {
+        // Handle sending email
+    });
+});
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on('sendEmail', () => {
+        // Your email sending logic here
+        console.log('Email sending triggered');
+    });
+    socket.on('sendEmail', () => {
+        sendEmailWithRetries(transporter, mailOptions, recipient, socket);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
+
+
 // Express API endpoint
 app.get('/api/smtp-settings', authenticateUser, async (req, res) => {
     try {
