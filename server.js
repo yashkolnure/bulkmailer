@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const http = require('http'); // Import HTTP module
+const fs = require('fs');   
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const socketIo = require('socket.io'); // Import Socket.IO
@@ -29,7 +30,7 @@ app.use(express.static('public')); // Serve static files from the 'public' folde
 
 
 const server = http.createServer(app);
-// Handle socket connections
+
 
 // MongoDB connection
 mongoose.connect(mongoUri)
@@ -327,7 +328,6 @@ app.post('/send-email', authenticateUser, upload.single('attachment'), async (re
                 try {
                     await sendEmail(transporter, mailOptions);
                     broadcast(`Email sent to: ${recipient}`);
-                    socket.emit('emailStatus', `Email sent to: ${recipient}`); // Emit successful email sending
                     
                     emailSent = true;
                 } catch (error) {
@@ -440,3 +440,4 @@ async function run() {
 server.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
+
