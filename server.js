@@ -22,7 +22,7 @@ app.use(bodyParser.json({ limit: '100mb' })); // Adjust the limit based on your 
 app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: 'https://birdmailer.fun' }));
+app.use(cors());
 app.use(express.static('public')); // Serve static files from the 'public' folder
 
 // MongoDB connection
@@ -230,6 +230,7 @@ app.get('/email-status', (req, res) => {
     req.on('close', () => {
         clients = clients.filter(client => client !== res); // Remove client on disconnect
     });
+});
 
 
 // POST route to send emails
