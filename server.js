@@ -12,23 +12,17 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const cors = require('cors');
-const http = require('http');
-const https = require('https');
-const fs = require('fs');
-const socketIo = require('socket.io');
-
 
 const app = express();
 const port = process.env.PORT || 3000;
 const mongoUri = process.env.MONGO_URI;
-const server = http.createServer(app); // Create an HTTP serve
 
 // Middleware
 app.use(bodyParser.json({ limit: '100mb' })); // Adjust the limit based on your needs
 app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({ origin: 'https://birdmailer.fun' }));
 app.use(express.static('public')); // Serve static files from the 'public' folder
 
 // MongoDB connection
@@ -45,22 +39,6 @@ mongoose.connect(mongoUri)
     });
     
 
-
-
-    const io = require("socket.io")(server, {
-        cors: {
-            origin: "https://birdmailer.fun",
-            methods: ["GET", "POST"]
-        }
-    });
-    // Socket.IO connection handling
-io.on('connection', (socket) => {
-    console.log('New client connected');
-
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
-    });
-});
 
 // Set up multer for file uploads
 const storage = multer.diskStorage({
@@ -238,7 +216,7 @@ let clients = [];
 
 // Function to broadcast email sending progress to all connected clients
 function broadcast(message) {
-    io.emit('emailUpdate', message); 
+    clients.forEach(client => client.write(`data: ${message}\n\n`));
 }
 
 // SSE endpoint to listen for email sending updates
@@ -252,7 +230,6 @@ app.get('/email-status', (req, res) => {
     req.on('close', () => {
         clients = clients.filter(client => client !== res); // Remove client on disconnect
     });
-});
 
 
 // POST route to send emails
@@ -430,8 +407,6 @@ async function run() {
     }
 }
 // WebSocket setup
-
-const PORT = process.env.PORT || 3000; // Define the port
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+const server = app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running on http://localhost:${port}`);
 });
