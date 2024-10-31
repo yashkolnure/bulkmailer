@@ -246,34 +246,6 @@ function broadcast(message) {
     clients.forEach(client => client.send(`data: ${message}\n\n`));
 }
 
-// SSE endpoint to listen for email sending updates
-app.get('/email-status', (req, res) => {
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.write('data: Emails are being Sent\n\n');
-
-    clients.push(res); // Add the client to the list
-
-    req.on('close', () => {
-        clients = clients.filter(client => client !== res); // Remove client on disconnect
-    });
-});
-
-app.get('/test-sse', (req, res) => {
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-
-    setInterval(() => {
-        res.write(`data: Hello at ${new Date().toISOString()}\n\n`);
-    }, 1000);
-
-    req.on('close', () => {
-        console.log('Client disconnected');
-    });
-});
-
 const io = socketIo(server); // Initialize Socket.IO with the server
 // Listen for Socket.IO connections
 io.on('connection', (socket) => {
