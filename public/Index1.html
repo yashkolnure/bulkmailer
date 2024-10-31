@@ -805,7 +805,7 @@ textarea.input__field {
     
     margin-right: 10px !important;
 }
-
+}
 @media (max-width: 600px) {
     .section__header {
         font-size: 1.75rem;
@@ -899,13 +899,13 @@ body {
 .carousel-track {
     display: inline-block;
     white-space: nowrap;
-    font-size: 4em; /* Adjust size as needed */
-    animation: scroll 40s linear infinite; /* Speed of rotation */
+    font-size: 3.5em; /* Adjust size as needed */
+    animation: scroll 55s linear infinite; /* Speed of rotation */
 }
 
 @keyframes scroll {
     0% {
-        transform: translateX(100%);
+        transform: translateX(0);
     }
     100% {
         transform: translateX(-100%);
@@ -945,25 +945,15 @@ body {
       </div>
     </header>
 
+    <body>
     <div class="carousel">
-        
-      <div class="carousel-track">
-        Free Email Marketing! | Send 2,000 Emails Daily! | 60,000 Emails Monthly – Free! | Automate Your Outreach | Bulk Emails in One Click! | Boost Customer Engagement!
-        <!-- Duplicate text for seamless loop -->
-        Free Email Marketing! | Send 2,000 Emails Daily! | 60,000 Emails Monthly – Free! | Automate Your Outreach | Bulk Emails in One Click! | Boost Customer Engagement!
+        <div class="carousel-track">
+            Free Email Marketing! | Send 2,000 Emails Daily! | 60,000 Emails Monthly – Free! | Automate Your Outreach | Bulk Emails in One Click! | Boost Customer Engagement!
+            <!-- Duplicate text to create a loop -->
+            Free Email Marketing! | Send 2,000 Emails Daily! | 60,000 Emails Monthly – Free! | Automate Your Outreach | Bulk Emails in One Click! | Boost Customer Engagement!
+        </div>
     </div>
-      
-  </div>
-  <script>
-    const track = document.querySelector('.carousel-track');
-
-// Clone items to create an infinite loop
-const items = document.querySelectorAll('.carousel-item');
-items.forEach(item => {
-    const clone = item.cloneNode(true);
-    track.appendChild(clone);
-});   
-    </script>
+</body>
 
     <section class="section__container explore__container" id="features">
       <div class="explore__header">
