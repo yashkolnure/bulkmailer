@@ -238,6 +238,7 @@ app.get('/email-status', (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
+    res.write('data: Emails are being Sent\n\n');
 
     clients.push(res); // Add the client to the list
 
@@ -246,6 +247,19 @@ app.get('/email-status', (req, res) => {
     });
 });
 
+app.get('/test-sse', (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    setInterval(() => {
+        res.write(`data: Hello at ${new Date().toISOString()}\n\n`);
+    }, 1000);
+
+    req.on('close', () => {
+        console.log('Client disconnected');
+    });
+});
 
 const io = socketIo(server); // Initialize Socket.IO with the server
 // Listen for Socket.IO connections
@@ -254,9 +268,9 @@ io.on('connection', (socket) => {
 
     // Listen for the sendEmail event
     socket.on('sendEmail', (data) => {
-        const { to, subject, message, attachment } = data; // Assuming you send these from the client
-        sendEmailWithRetries(to, subject, message, attachment, socket);
-    });
+         // Call your sendEmailWithRetries function here
+         sendEmailWithRetries(data.to, data.subject, data.message, data.attachment, socket);
+        });
 
     socket.on('disconnect', () => {
         console.log('User disconnected');

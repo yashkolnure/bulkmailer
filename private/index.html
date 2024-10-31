@@ -329,19 +329,21 @@
 <script src="app.js"></script>
 <script src="server.js"></script>
 <script>
-    const eventSource = new EventSource('/email-status');
+        // Create a new EventSource to listen for email status updates
+        const eventSource = new EventSource('/email-status');
 
-    // Listen for messages from the server
-    eventSource.onmessage = function(event) {
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML += `<p>${event.data}</p>`; // Append the message to the result div
-    };
+        // Listen for messages from the server
+        eventSource.onmessage = function(event) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML += `<p>${event.data}</p>`; // Append the message to the result div
+        };
 
-    eventSource.onerror = function(event) {
-        console.error("Error with SSE:", event);
-        eventSource.close(); // Optionally close the connection
-    };
-</script>
+        // Handle errors
+        eventSource.onerror = function(event) {
+            console.error("Error with SSE:", event);
+            eventSource.close(); // Optionally close the connection
+        };
+    </script>
 
 
 <script>
