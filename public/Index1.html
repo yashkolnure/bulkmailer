@@ -21,7 +21,7 @@
   --secondary-color-dark: #d79447;
   --text-light: #d1d5db;
   --white: #ffffff;
-  --max-width: 1200px;
+  --max-width: 1400px;
 }
 
 
@@ -120,13 +120,15 @@ nav {
   list-style: none;
   display: flex;
   align-items: center;
-  gap: 3rem;
+  gap: 4rem;
 }
 
 .link a {
   position: relative;
   padding-bottom: 0.75rem;
   color: var(--white);
+  font-size: 18px;
+  letter-spacing: 2.5px;
 }
 
 .link a::after {
@@ -198,6 +200,7 @@ nav {
 
 .header__image {
   position: relative;
+  margin-right: 30px;
 }
 
 .header__image::before {
@@ -217,6 +220,7 @@ nav {
 .header__image img {
   max-width: 460px;
   margin: auto;
+  margin-right: 30px;
 }
 
 .explore__header {
@@ -817,14 +821,16 @@ textarea.input__field {
 
 /* Logo */
 .nav__logo {
-    max-width: 80px; /* Adjust logo size */
+    max-width: 100px; /* Adjust logo size */
     border-radius: 10px; /* Optional: Adds rounded corners */
+    margin-left: 15px;
 }
 
 /* Buttons */
 .btn {
     padding: 0.8rem 1.5rem; /* Adjust padding for smaller buttons */
     font-size: 0.9rem; /* Adjust font size for smaller buttons */
+    margin-right: 120px;
 }
 
 /* Banner Image */
@@ -862,6 +868,44 @@ textarea.input__field {
     height: 100%;
 }
 
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.carousel {
+    overflow: hidden;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    background-color: #27060600; /* Dark background for contrast */
+    padding: 20px 0;
+    color: #f9ac54; /* Text color */
+}
+
+.carousel-track {
+    display: flex;
+    white-space: nowrap;
+    font-size: 4em; /* Adjust size as needed */
+    animation: scroll 30s linear infinite; /* Speed of rotation */
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+
   </style>
   <body>
     <nav>
@@ -893,6 +937,27 @@ textarea.input__field {
         <img src="header_birdmailer.png" alt="Bird Mailer header image" />
       </div>
     </header>
+
+    <div class="carousel">
+        
+      <div class="carousel-track">
+          Free Email Marketing! | Send 2,000 Emails Daily! | 60,000 Emails Monthly – Free! | Automate Your Outreach | Bulk Emails in One Click! | Boost Customer Engagement!
+      </div>
+      <div class="carousel-track">
+          Free Email Marketing! | Send 2,000 Emails Daily! | 60,000 Emails Monthly – Free! | Automate Your Outreach | Bulk Emails in One Click! | Boost Customer Engagement!
+      </div>
+      
+  </div>
+  <script>
+    const track = document.querySelector('.carousel-track');
+
+// Clone items to create an infinite loop
+const items = document.querySelectorAll('.carousel-item');
+items.forEach(item => {
+    const clone = item.cloneNode(true);
+    track.appendChild(clone);
+});   
+    </script>
 
     <section class="section__container explore__container" id="features">
       <div class="explore__header">
