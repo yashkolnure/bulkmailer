@@ -243,7 +243,7 @@ let clients = [];
 
 // Function to broadcast email sending progress to all connected clients
 function broadcast(message) {
-    clients.forEach(client => client.write(`data: ${message}\n\n`));
+    clients.forEach(client => client.send(`data: ${message}\n\n`));
 }
 
 // SSE endpoint to listen for email sending updates
