@@ -30,7 +30,7 @@ app.use(cors());
 app.use(express.static('public')); // Serve static files from the 'public' folder
 
 
-const server = http.createServer(app);
+const server = http.createServer(options, app);
 
 
 const options = {
@@ -444,6 +444,6 @@ async function run() {
 }
 
 
-httpsServer.listen(3000, () => {
-    console.log('HTTPS Server running on https://localhost:3000');
+server.listen(3000, () => {
+    console.log('HTTP Server running on http://localhost:3000');
 });
