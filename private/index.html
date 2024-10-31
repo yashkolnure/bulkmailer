@@ -329,21 +329,19 @@
 <script src="app.js"></script>
 <script src="server.js"></script>
 <script>
-        // Create a new EventSource to listen for email status updates
-        const eventSource = new EventSource('/email-status');
+    const eventSource = new EventSource('/email-status');
 
-        // Listen for messages from the server
-        eventSource.onmessage = function(event) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML += `<p>${event.data}</p>`; // Append the message to the result div
-        };
+    // Listen for messages from the server
+    eventSource.onmessage = function(event) {
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML += `<p>${event.data}</p>`; // Append the message to the result div
+    };
 
-        // Handle errors
-        eventSource.onerror = function(event) {
-            console.error("Error with SSE:", event);
-            eventSource.close(); // Optionally close the connection
-        };
-    </script>
+    eventSource.onerror = function(event) {
+        console.error("Error with SSE:", event);
+        eventSource.close(); // Optionally close the connection
+    };
+</script>
 
 
 <script>
@@ -556,24 +554,28 @@
     });
 </script>
 <script>
-    const socket = io('https://localhost:3000'); // Make sure the URL matches your server
-    const messagesList = document.getElementById('messages');
+    const socket = new WebSocket('wss://birdmailer.in'); // Use wss for secure connection
 
-    // Send message on button click
-    document.getElementById('sendButton').onclick = function() {
-        const messageInput = document.getElementById('messageInput');
-        const msg = messageInput.value;
-        socket.emit('message', msg); // Emit message to server
-        messageInput.value = '';
-    };
 
     // Listen for messages from the server
-    socket.on('message', (msg) => {
-        const li = document.createElement('li');
-        li.textContent = msg;
-        messagesList.appendChild(li);
-    });
+    socket.onmessage = function(event) {
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML += `<p>${event.data}</p>`; // Append the message to the result div
+    };
+
+    socket.onopen = function(event) {
+        console.log('WebSocket connection established');
+    };
+
+    socket.onerror = function(error) {
+        console.error('WebSocket error:', error);
+    };
+
+    socket.onclose = function(event) {
+        console.log('WebSocket connection closed');
+    };
 </script>
+
 <script>
     // Logout functionality
     document.getElementById('logoutButton').addEventListener('click', async (event) => {

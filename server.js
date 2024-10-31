@@ -20,6 +20,8 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 const mongoUri = process.env.MONGO_URI;
+const wss = new WebSocket.Server({ server });
+
 
 // Middleware
 app.use(bodyParser.json({ limit: '100mb' })); // Adjust the limit based on your needs
@@ -53,6 +55,20 @@ mongoose.connect(mongoUri)
     
 
 
+// Handle WebSocket connections
+wss.on('connection', (ws) => {
+    console.log('Client connected');
+    clients.push(ws); // Add the client to the list
+
+    // Send a welcome message or initial status
+    ws.send('Welcome! Emails are being sent.');
+
+    // Handle disconnection
+    ws.on('close', () => {
+        console.log('Client disconnected');
+        clients = clients.filter(client => client !== ws); // Remove client on disconnect
+    });
+});
 // Set up multer for file uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
