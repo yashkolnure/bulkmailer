@@ -30,7 +30,7 @@ app.use(cors());
 app.use(express.static('public')); // Serve static files from the 'public' folder
 
 
-const server = http.createServer(options, app);
+const server = http.createServer(app);
 
 
 const options = {
