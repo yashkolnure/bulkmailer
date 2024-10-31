@@ -60,9 +60,6 @@ wss.on('connection', (ws) => {
     console.log('Client connected');
     clients.push(ws); // Add the client to the list
 
-    // Send a welcome message or initial status
-    ws.send('Welcome! Emails are being sent.');
-
     // Handle disconnection
     ws.on('close', () => {
         console.log('Client disconnected');
