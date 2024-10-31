@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const http = require('http'); // Import HTTP module
 const fs = require('fs');   
+const https = require('https');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const socketIo = require('socket.io'); // Import Socket.IO
@@ -32,6 +33,11 @@ app.use(express.static('public')); // Serve static files from the 'public' folde
 const server = http.createServer(app);
 
 
+const options = {
+    key: fs.readFileSync('ssl/privatekey.pem'),
+    cert: fs.readFileSync('ssl/certificate.pem'),
+};
+const httpsServer = https.createServer(options, app);
 // MongoDB connection
 mongoose.connect(mongoUri)
     .then(() => {
@@ -241,7 +247,8 @@ app.get('/email-status', (req, res) => {
 });
 
 
-const io = require('socket.io')(server); // Ensure you have your server instance
+const io = socketIo(server); // Initialize Socket.IO with the server
+// Listen for Socket.IO connections
 io.on('connection', (socket) => {
     console.log('A user connected');
 
@@ -255,7 +262,6 @@ io.on('connection', (socket) => {
         console.log('User disconnected');
     });
 });
-
 
 // POST route to send emails
 app.post('/send-email', authenticateUser, upload.single('attachment'), async (req, res) => {
@@ -437,7 +443,7 @@ async function run() {
     }
 }
 
-server.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
 
+httpsServer.listen(3000, () => {
+    console.log('HTTPS Server running on https://localhost:3000');
+});

@@ -325,7 +325,9 @@
     
   <!-- Include PapaParse for CSV parsing -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
 <script src="app.js"></script>
+<script src="server.js"></script>
 <script>
     const eventSource = new EventSource('/email-status');
 
@@ -551,26 +553,24 @@
         console.log('Disconnected from Socket.IO server');
     });
 </script>
-<script src="/socket.io/socket.io.js"></script>
 <script>
-    // Ensure this is defined in the correct scope
-    let socket;
+    const socket = io('https://localhost:3000'); // Make sure the URL matches your server
+    const messagesList = document.getElementById('messages');
 
-    // Initialize the socket connection once the DOM content is fully loaded
-    document.addEventListener("DOMContentLoaded", function() {
-        socket = io(); // Initialize the socket connection
+    // Send message on button click
+    document.getElementById('sendButton').onclick = function() {
+        const messageInput = document.getElementById('messageInput');
+        const msg = messageInput.value;
+        socket.emit('message', msg); // Emit message to server
+        messageInput.value = '';
+    };
 
-        // Listen for email status updates
-        socket.on('emailStatus', (message) => {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML += `<p>${message}</p>`; // Append the message to the result div
-        });
+    // Listen for messages from the server
+    socket.on('message', (msg) => {
+        const li = document.createElement('li');
+        li.textContent = msg;
+        messagesList.appendChild(li);
     });
-
-    // Function to send email request (example)
-    function sendEmail() {
-        socket.emit('sendEmail'); // Emit an event to send an email
-    }
 </script>
 <script>
     // Logout functionality
