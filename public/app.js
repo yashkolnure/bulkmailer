@@ -33,9 +33,44 @@ document.getElementById('emailForm').addEventListener('submit', async (event) =>
   }
 });
 
-// WebSocket client setup
-const socket = new WebSocket('wss://localhost:3000');
 
+// WebSocket client setup
+const socket = new WebSocket('wss://birdmailer.fun'); // Use wss for secure connection
+
+    // Listen for messages from the server
+    socket.onmessage = function(event) {
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML += `<p>${event.data}</p>`; // Append the message to the result div
+    };
+
+    socket.onopen = function(event) {
+        console.log('WebSocket connection established');
+    };
+
+    socket.onerror = function(error) {
+        console.error('WebSocket error:', error);
+    };
+
+    socket.onclose = function(event) {
+        console.log('WebSocket connection closed');
+    };
+// Listen for messages from the server
+socket.onmessage = function(event) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML += `<p>${event.data}</p>`; // Append the message to the result div
+};
+
+socket.onopen = function(event) {
+    console.log('WebSocket connection established');
+};
+
+socket.onerror = function(error) {
+    console.error('WebSocket error:', error);
+};
+
+socket.onclose = function(event) {
+    console.log('WebSocket connection closed');
+};
 // Handle CSV File Upload and Parse
 document.getElementById('csvFile').addEventListener('change', handleFileUpload);
 

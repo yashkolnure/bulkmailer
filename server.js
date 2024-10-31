@@ -20,6 +20,7 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 const mongoUri = process.env.MONGO_URI;
+const server = http.createServer(app); 
 const wss = new WebSocket.Server({ server });
 
 
@@ -32,7 +33,6 @@ app.use(cors());
 app.use(express.static('public')); // Serve static files from the 'public' folder
 
 
-const server = http.createServer(app);
 
 
 const options = {
