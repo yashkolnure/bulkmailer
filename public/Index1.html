@@ -68,6 +68,9 @@
   outline: none;
   border: none;
   font-size: 1.6rem;
+
+
+
   color: var(--white);
   background-color: var(--secondary-color);
   border-radius: 5px;
@@ -798,6 +801,9 @@ textarea.input__field {
     .join__grid {
         flex-direction: column;
     }
+    .btn {
+    
+    margin-right: 10px !important;
 }
 
 @media (max-width: 600px) {
@@ -844,6 +850,7 @@ textarea.input__field {
 @media (max-width: 768px) {
     .nav__logo {
         max-width: 60px; /* Smaller logo on smaller screens */
+        margin-left: 0px;
     }
 
   
@@ -890,10 +897,10 @@ body {
 }
 
 .carousel-track {
-    display: flex;
+    display: inline-block;
     white-space: nowrap;
     font-size: 4em; /* Adjust size as needed */
-    animation: scroll 30s linear infinite; /* Speed of rotation */
+    animation: scroll 40s linear infinite; /* Speed of rotation */
 }
 
 @keyframes scroll {
@@ -941,11 +948,10 @@ body {
     <div class="carousel">
         
       <div class="carousel-track">
-          Free Email Marketing! | Send 2,000 Emails Daily! | 60,000 Emails Monthly – Free! | Automate Your Outreach | Bulk Emails in One Click! | Boost Customer Engagement!
-      </div>
-      <div class="carousel-track">
-          Free Email Marketing! | Send 2,000 Emails Daily! | 60,000 Emails Monthly – Free! | Automate Your Outreach | Bulk Emails in One Click! | Boost Customer Engagement!
-      </div>
+        Free Email Marketing! | Send 2,000 Emails Daily! | 60,000 Emails Monthly – Free! | Automate Your Outreach | Bulk Emails in One Click! | Boost Customer Engagement!
+        <!-- Duplicate text for seamless loop -->
+        Free Email Marketing! | Send 2,000 Emails Daily! | 60,000 Emails Monthly – Free! | Automate Your Outreach | Bulk Emails in One Click! | Boost Customer Engagement!
+    </div>
       
   </div>
   <script>
