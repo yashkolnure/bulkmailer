@@ -252,7 +252,7 @@ io.on('connection', (socket) => {
 });
 
 // POST route to send emails
-app.post('/send-email', authenticateUser, upload.single('attachment'), async (req, res) => {
+app.post('/send-email', authenticateUser, async (req, res) => {
     const { to, subject, message } = req.body;
     const attachment = req.file; // Get the uploaded file
     
