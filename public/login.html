@@ -224,13 +224,28 @@ p a:hover {
     margin: 2% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
+   
     max-width: 500px;
     border-radius: 8px; /* Rounded corners */
     overflow-y: auto; /* Scroll if needed */
     max-height: 96vh; /* Maximum height of modal */
 }
 
+
+@media screen and (max-width: 768px) {
+    .modal-content {
+    background-color: #fefefe;
+    margin: 2% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 8px;
+    overflow-y: auto;
+    max-height: 96vh;
+    margin-left: 18px;
+    margin-right: 18px;
+}
+    
+}
 .close {
     color: #aaa;
     float: right;
