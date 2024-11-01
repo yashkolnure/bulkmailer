@@ -296,10 +296,6 @@
                 <label for="message">Message:</label>
                 <textarea id="message" name="message" placeholder="Type your message here..." required></textarea>
 
-                <label for="attachment">Attachment:</label> <!-- New attachment label -->
-                <input type="file" id="attachment" name="attachment" accept="*/*"> <!-- New attachment input -->
-        
-
                 <button id="sendButton" type="submit">Send Emails</button>
       <div id="countdown"></div>
       <div id="statusDiv"></div>
@@ -533,49 +529,9 @@
             sidebar.classList.remove("active");
         }
     });
+
+
 </script>
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    const socket = io(); // Connect to the Socket.IO server
-
-    socket.on('emailStatus', (message) => {
-        const resultDiv = document.getElementById('result');
-        const newMessage = document.createElement('div');
-        newMessage.textContent = message; // Display the message
-        resultDiv.appendChild(newMessage); // Append the message to the result div
-    });
-
-    socket.on('connect', () => {
-        console.log('Connected to Socket.IO server');
-    });
-
-    socket.on('disconnect', () => {
-        console.log('Disconnected from Socket.IO server');
-    });
-</script>
-<script>
-    const socket = new WebSocket('wss://birdmailer.in'); // Use wss for secure connection
-
-
-    // Listen for messages from the server
-    socket.onmessage = function(event) {
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML += `<p>${event.data}</p>`; // Append the message to the result div
-    };
-
-    socket.onopen = function(event) {
-        console.log('WebSocket connection established');
-    };
-
-    socket.onerror = function(error) {
-        console.error('WebSocket error:', error);
-    };
-
-    socket.onclose = function(event) {
-        console.log('WebSocket connection closed');
-    };
-</script>
-
 <script>
     // Logout functionality
     document.getElementById('logoutButton').addEventListener('click', async (event) => {
