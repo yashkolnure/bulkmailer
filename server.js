@@ -279,6 +279,11 @@ app.post('/send-email', authenticateUser, async (req, res) => {
 
         const maxRetries = 2; // Maximum retries for a failed email
         const smtpCount = user.smtpCredentials.length; // Get total number of SMTP servers
+        const formatMessage = (msg) => {
+            // Add your formatting logic here
+            // For example, you might want to trim whitespace or escape HTML
+            return msg;
+        };
 
         if (smtpCount === 0) {
             return res.status(400).json({ message: 'No SMTP servers configured.' });
@@ -301,17 +306,15 @@ app.post('/send-email', authenticateUser, async (req, res) => {
                 subject: subject,
                 replyTo: user.email,
                 html: `
-            <div>
-        ${message}
-        
-        <p style="font-size: small; color: gray;">This email is sent with <a href="https://birdmailer.in/">Birdmailer.in</a>.</p>
-    </div>
+                <div>
+                    <p>${formatMessage(message).replace(/\n/g, '<br>')}</p>
+                    <p style="font-size: small; color: gray;">
+                        This email is sent with <a href="https://birdmailer.in/">Birdmailer.in</a>.
+                    </p>
+                </div>
             `,
-              text: `\n\nThis email is sent with Birdmailer.in.`,
-              attachments: attachment ? [{ // Only add the attachment if it exists
-                filename: attachment.originalname,
-                path: attachment.path
-            }] : []
+            text: `This email is sent with Birdmailer.in.`,
+            
             };
 
             let retries = 0;
