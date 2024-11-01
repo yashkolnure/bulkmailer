@@ -238,7 +238,6 @@ const io = socketIo(server); // Initialize Socket.IO with the server
 // Listen for Socket.IO connections
 io.on('connection', (socket) => {
     console.log('A user connected');
-    
 
     // Listen for the sendEmail event
     socket.on('sendEmail', (data) => {
@@ -321,13 +320,13 @@ app.post('/send-email', authenticateUser, async (req, res) => {
             while (retries < maxRetries && !emailSent) {
                 try {
                     await sendEmail(transporter, mailOptions);
-                    socket.emit('emailStatus', { status: 'sent', to: recipient });
+                    broadcast(`Email sent to: ${recipient}`);
                     
                     emailSent = true;
                 } catch (error) {
                     retries++;
                     console.error(`Error sending email to ${recipient}: ${error.message}`);
-                    socket.emit('emailStatus', { status: 'failed', to: recipient, error: error.message });
+                    broadcast(`Error sending email to ${recipient}: ${error.message}. Retrying... (${retries}/${maxRetries})`);
                    
                    
                 }
@@ -335,7 +334,7 @@ app.post('/send-email', authenticateUser, async (req, res) => {
 
             if (!emailSent) {
                 console.error(`Failed to send email to ${recipient} after ${maxRetries} attempts. Skipping...`);
-                socket.emit('emailStatus', { status: 'failed', to: recipient, error: `Failed after ${maxRetries} attempts` });
+                broadcast(`Failed to send email to ${recipient} after ${maxRetries} attempts. Skipping...`);
                
             }
         };
