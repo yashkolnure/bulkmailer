@@ -140,6 +140,7 @@ input:not(:placeholder-shown) + label {
             font-size: 1.1em;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin-top: 10px;
         }
 
         button:disabled {
@@ -210,9 +211,6 @@ input:not(:placeholder-shown) + label {
 </head>
 <body>
     <div class="register-container">
-        
-        <span class="bg__blur"></span>
-        <span class="bg__blur header__blur"></span>
         <img src="/logo.png" alt="Logo" class="logo">
         <h2>Create Your Account!</h2>
         <form id="registerForm">
@@ -230,82 +228,31 @@ input:not(:placeholder-shown) + label {
             </div>
 
             <h3>SMTP Credentials</h3>
-            
-            <div> <br></div>
-            <h4>SMTP 1</h4>
-            <div class="input-group">
-                <input type="email" id="smtpmail1" name="smtpmail1" required placeholder=" ">
-                <label for="smtpmail1">SMTP Email 1</label>
-            </div>
-            <div class="input-group">
-                <input type="password" id="smtppass1" name="smtppass1" required placeholder=" ">
-                <label for="smtppass1">SMTP Password 1</label>
-            </div>
-            <div class="input-group">
-                <input type="number" id="smtpport1" name="smtpport1" required placeholder=" ">
-                <label for="smtpport1">SMTP Port 1</label>
-            </div>
-            
-        <span class="bg__blur"></span>
-        <span class="bg__blur header__blur"></span>
-            <div class="input-group">
-                <input type="text" id="smtphost1" name="smtphost1" required placeholder=" ">
-                <label for="smtphost1">SMTP Host 1</label>
-            </div>
-            <!-- <h4>SMTP 2</h4>
-            <div class="input-group">
-                <input type="email" id="smtpmail2" name="smtpmail2" required placeholder=" ">
-                <label for="smtpmail2">SMTP Email 2</label>
-            </div>
-            <div class="input-group">
-                <input type="password" id="smtppass2" name="smtppass2" required placeholder=" ">
-                <label for="smtppass2">SMTP Password 2</label>
-            </div>
-            <div class="input-group">
-                <input type="number" id="smtpport2" name="smtpport2" required placeholder=" ">
-                <label for="smtpport2">SMTP Port 2</label>
-            </div>
-            <div class="input-group">
-                <input type="text" id="smtphost2" name="smtphost2" required placeholder=" ">
-                <label for="smtphost2">SMTP Host 2</label>
-            </div>
-            <h4>SMTP 3</h4>
-            <div class="input-group">
-                <input type="email" id="smtpmail3" name="smtpmail3" required placeholder=" ">
-                <label for="smtpmail3">SMTP Email 3</label>
-            </div>
-            <div class="input-group">
-                <input type="password" id="smtppass3" name="smtppass3" required placeholder=" ">
-                <label for="smtppass3">SMTP Password 3</label>
-            </div>
-            <div class="input-group">
-                <input type="number" id="smtpport3" name="smtpport3" required placeholder=" ">
-                <label for="smtpport3">SMTP Port 3</label>
-            </div>
-            <div class="input-group">
-                <input type="text" id="smtphost3" name="smtphost3" required placeholder=" ">
-                <label for="smtphost3">SMTP Host 3</label>
-            </div>
-            <h4>SMTP 4</h4>
-            <div class="input-group">
-                <input type="email" id="smtpmail4" name="smtpmail4" required placeholder=" ">
-                <label for="smtpmail4">SMTP Email 4</label>
-            </div>
-            <div class="input-group">
-                <input type="password" id="smtppass4" name="smtppass4" required placeholder=" ">
-                <label for="smtppass4">SMTP Password 4</label>
-            </div>
-            <div class="input-group">
-                <input type="number" id="smtpport4" name="smtpport4" required placeholder=" ">
-                <label for="smtpport4">SMTP Port 4</label>
-            </div>
-            <div class="input-group">
-                <input type="text" id="smtphost4" name="smtphost4" required placeholder=" ">
-                <label for="smtphost4">SMTP Host 4</label>
-            </div> -->
 
-            <span class="bg__blur"></span>
-            <span class="bg__blur header__blur"></span>
+            <div id="smtpFieldsContainer">
+                <div class="smtp-section" id="smtp1">
+                    <h4>SMTP 1</h4>
+                    <div class="input-group">
+                        <input type="email" id="smtpmail1" name="smtpmail1" placeholder=" ">
+                        <label for="smtpmail1">SMTP Email 1</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="smtppass1" name="smtppass1" placeholder=" ">
+                        <label for="smtppass1">SMTP Password 1</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="number" id="smtpport1" name="smtpport1" placeholder=" ">
+                        <label for="smtpport1">SMTP Port 1</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="smtphost1" name="smtphost1" placeholder=" ">
+                        <label for="smtphost1">SMTP Host 1</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="addSmtpButton">Add Another SMTP</button>
+
             <button type="submit" id="submitBtn">Register</button>
         </form>
         <p>Already have an account? <a href="login.html">Login here</a></p>
@@ -314,56 +261,76 @@ input:not(:placeholder-shown) + label {
         <p class="copyrigh">Product of <a href="https://www.avenirya.com/">Avenirya Solutions OPC Private Limited</a></p>
     </div>
 
-    
     <script>
+        let smtpCount = 1;
+
+        // Function to add a new SMTP section
+        document.getElementById('addSmtpButton').addEventListener('click', () => {
+            if (smtpCount >= 4) return;
+
+            smtpCount++;
+            const newSmtpSection = document.createElement('div');
+            newSmtpSection.classList.add('smtp-section');
+            newSmtpSection.innerHTML = `
+                <h4>SMTP ${smtpCount}</h4>
+                <div class="input-group">
+                    <input type="email" id="smtpmail${smtpCount}" name="smtpmail${smtpCount}" placeholder=" ">
+                    <label for="smtpmail${smtpCount}">SMTP Email ${smtpCount}</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="smtppass${smtpCount}" name="smtppass${smtpCount}" placeholder=" ">
+                    <label for="smtppass${smtpCount}">SMTP Password ${smtpCount}</label>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="smtpport${smtpCount}" name="smtpport${smtpCount}" placeholder=" ">
+                    <label for="smtpport${smtpCount}">SMTP Port ${smtpCount}</label>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="smtphost${smtpCount}" name="smtphost${smtpCount}" placeholder=" ">
+                    <label for="smtphost${smtpCount}">SMTP Host ${smtpCount}</label>
+                </div>`;
+            
+            document.getElementById('smtpFieldsContainer').appendChild(newSmtpSection);
+        });
+
+        // Form submission with conditional SMTP data
         document.getElementById('registerForm').addEventListener('submit', async function (event) {
-            event.preventDefault(); // Prevent the form from submitting the default way
+            event.preventDefault();
+
+            const smtpCredentials = [];
+            for (let i = 1; i <= smtpCount; i++) {
+                const smtpEmail = document.getElementById(`smtpmail${i}`).value;
+                const smtpPass = document.getElementById(`smtppass${i}`).value;
+                const smtpPort = document.getElementById(`smtpport${i}`).value;
+                const smtpHost = document.getElementById(`smtphost${i}`).value;
+
+                if (smtpEmail && smtpPass && smtpPort && smtpHost) {
+                    smtpCredentials.push({
+                        email: smtpEmail,
+                        password: smtpPass,
+                        port: smtpPort,
+                        host: smtpHost,
+                    });
+                }
+            }
 
             const formData = {
                 username: document.getElementById('username').value,
                 email: document.getElementById('email').value,
                 password: document.getElementById('password').value,
-                smtpCredentials: [
-                {
-        email: document.getElementById('smtpmail1').value,
-        password: document.getElementById('smtppass1').value,
-        port: document.getElementById('smtpport1').value,
-        host: document.getElementById('smtphost1').value,
-    },
-    {
-        email: document.getElementById('smtpmail2').value,
-        password: document.getElementById('smtppass2').value,
-        port: document.getElementById('smtpport2').value,
-        host: document.getElementById('smtphost2').value,
-    },
-    {
-        email: document.getElementById('smtpmail3').value,
-        password: document.getElementById('smtppass3').value,
-        port: document.getElementById('smtpport3').value,
-        host: document.getElementById('smtphost3').value,
-    },
-    {
-        email: document.getElementById('smtpmail4').value,
-        password: document.getElementById('smtppass4').value,
-        port: document.getElementById('smtpport4').value,
-        host: document.getElementById('smtphost4').value,
-    },
-    
-                ],
+                smtpCredentials,
             };
 
             try {
                 const response = await fetch('/register', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData),
                 });
 
                 if (response.ok) {
                     alert('Registration successful!');
-                    window.location.href = '/login.html'; // Redirect to login page
+                    window.location.href = '/login.html';
                 } else {
                     const errorText = await response.text();
                     alert('Registration failed: ' + errorText);
