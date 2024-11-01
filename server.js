@@ -66,18 +66,6 @@ wss.on('connection', (ws) => {
         clients = clients.filter(client => client !== ws); // Remove client on disconnect
     });
 });
-// Set up multer for file uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Directory to save uploaded files
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname)); // Unique file name
-    }
-});
-
-const upload = multer({ storage: storage });
-
 // JWT Authentication Middleware
 const authenticateUser = (req, res, next) => {
     const token = req.cookies.authToken; // Check for the auth token in cookies
@@ -250,6 +238,7 @@ const io = socketIo(server); // Initialize Socket.IO with the server
 // Listen for Socket.IO connections
 io.on('connection', (socket) => {
     console.log('A user connected');
+    
 
     // Listen for the sendEmail event
     socket.on('sendEmail', (data) => {
@@ -332,13 +321,13 @@ app.post('/send-email', authenticateUser, upload.single('attachment'), async (re
             while (retries < maxRetries && !emailSent) {
                 try {
                     await sendEmail(transporter, mailOptions);
-                    broadcast(`Email sent to: ${recipient}`);
+                    socket.emit('emailStatus', { status: 'sent', to: recipient });
                     
                     emailSent = true;
                 } catch (error) {
                     retries++;
                     console.error(`Error sending email to ${recipient}: ${error.message}`);
-                    broadcast(`Error sending email to ${recipient}: ${error.message}. Retrying... (${retries}/${maxRetries})`);
+                    socket.emit('emailStatus', { status: 'failed', to: recipient, error: error.message });
                    
                    
                 }
@@ -346,7 +335,7 @@ app.post('/send-email', authenticateUser, upload.single('attachment'), async (re
 
             if (!emailSent) {
                 console.error(`Failed to send email to ${recipient} after ${maxRetries} attempts. Skipping...`);
-                broadcast(`Failed to send email to ${recipient} after ${maxRetries} attempts. Skipping...`);
+                socket.emit('emailStatus', { status: 'failed', to: recipient, error: `Failed after ${maxRetries} attempts` });
                
             }
         };
