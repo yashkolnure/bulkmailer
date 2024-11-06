@@ -226,11 +226,19 @@ input:not(:placeholder-shown) + label {
   right: 2rem;
 }
 
+.input-group input::placeholder {
+        opacity: 0; /* Hide placeholder by default */
+        transition: opacity 0.3s ease;
+    }
+    .input-group input:focus::placeholder {
+        opacity: 1; /* Show placeholder on focus */
+    }
+
     </style>
 </head>
 <body>
     <div class="register-container">
-        <img src="/logo.png" alt="Logo" class="logo">
+        <a href="/"> <img src="/logo.png" alt="Logo" class="logo"></a>
         <h2>Create Your Account!</h2>
         <form id="registerForm">
             <div class="input-group">
@@ -252,19 +260,19 @@ input:not(:placeholder-shown) + label {
                 <div class="smtp-section" id="smtp1">
                     <h4>SMTP 1</h4>
                     <div class="input-group">
-                        <input type="email" id="smtpmail1" name="smtpmail1" placeholder=" ">
+                        <input type="email" id="smtpmail1" name="smtpmail1" placeholder="Sender Mail to be used">
                         <label for="smtpmail1">SMTP Email 1</label>
                     </div>
                     <div class="input-group">
-                        <input type="password" id="smtppass1" name="smtppass1" placeholder=" ">
+                        <input type="password" id="smtppass1" name="smtppass1" placeholder="Use App Password for Gmail">
                         <label for="smtppass1">SMTP Password 1</label>
                     </div>
                     <div class="input-group">
-                        <input type="number" id="smtpport1" name="smtpport1" placeholder=" ">
+                        <input type="number" id="smtpport1" name="smtpport1" placeholder="587 for TLS (recommended) or 465 for SSL">
                         <label for="smtpport1">SMTP Port 1</label>
                     </div>
                     <div class="input-group">
-                        <input type="text" id="smtphost1" name="smtphost1" placeholder=" ">
+                        <input type="text" id="smtphost1" name="smtphost1" placeholder="smtp.gmail.com for Gmail">
                         <label for="smtphost1">SMTP Host 1</label>
                     </div>
                 </div>
@@ -285,7 +293,7 @@ input:not(:placeholder-shown) + label {
 
         // Function to add a new SMTP section
         document.getElementById('addSmtpButton').addEventListener('click', () => {
-            if (smtpCount >= 4) return;
+            if (smtpCount >= 20) return;
 
             smtpCount++;
             const newSmtpSection = document.createElement('div');
@@ -293,19 +301,19 @@ input:not(:placeholder-shown) + label {
             newSmtpSection.innerHTML = `
                 <h4>SMTP ${smtpCount}</h4>
                 <div class="input-group">
-                    <input type="email" id="smtpmail${smtpCount}" name="smtpmail${smtpCount}" placeholder=" ">
+                    <input type="email" id="smtpmail${smtpCount}" name="smtpmail${smtpCount}" placeholder="Sender Mail to be used">
                     <label for="smtpmail${smtpCount}">SMTP Email ${smtpCount}</label>
                 </div>
                 <div class="input-group">
-                    <input type="password" id="smtppass${smtpCount}" name="smtppass${smtpCount}" placeholder=" ">
+                    <input type="password" id="smtppass${smtpCount}" name="smtppass${smtpCount}" placeholder="Use App Password for Gmail">
                     <label for="smtppass${smtpCount}">SMTP Password ${smtpCount}</label>
                 </div>
                 <div class="input-group">
-                    <input type="number" id="smtpport${smtpCount}" name="smtpport${smtpCount}" placeholder=" ">
+                    <input type="number" id="smtpport${smtpCount}" name="smtpport${smtpCount}" placeholder="587 for TLS (recommended) or 465 for SSL">
                     <label for="smtpport${smtpCount}">SMTP Port ${smtpCount}</label>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="smtphost${smtpCount}" name="smtphost${smtpCount}" placeholder=" ">
+                    <input type="text" id="smtphost${smtpCount}" name="smtphost${smtpCount}" placeholder="smtp.gmail.com for Gmail">
                     <label for="smtphost${smtpCount}">SMTP Host ${smtpCount}</label>
                 </div>`;
             

@@ -47,13 +47,6 @@ mongoose.connect(mongoUri)
         run(); // Call your run function to fetch data or perform other initializations
     })
     .catch(err => console.error('Failed to connect to MongoDB', err));
-    
-
-    app.get('/register1111', (req, res) => {
-        res.sendFile(path.join( 'public', 'register1111.html'));
-    });
-    
-
 
 // Handle WebSocket connections
 wss.on('connection', (ws) => {
