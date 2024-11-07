@@ -223,7 +223,7 @@ app.post('/send-email-admin', async (req, res) => {
 const io = socketIo(server);
 
 let socketClient = null;
-
+let clients = [];
 // Establish WebSocket connection and store the connected client
 io.on('connection', (socket) => {
     console.log('Client connected:', socket.id);
