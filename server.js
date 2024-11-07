@@ -171,7 +171,7 @@ const createTransporter = ({ user, pass, host, port }) => {
 const sendEmail = async (transporter, mailOptions, retries = 1) => {
     try {
         await transporter.sendMail(mailOptions);
-        console.log(`Email sent to: ${mailOptions.to}`);
+        console.log(`Email sent to.: ${mailOptions.to}`);
         io.emit('mailStatus', `Email sent to: ${mailOptions.to}`);
         return true; // Indicate success
     } catch (error) {
