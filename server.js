@@ -171,7 +171,7 @@ const createTransporter = ({ user, pass, host, port }) => {
 const sendEmail = async (transporter, mailOptions, retries = 1) => {
     try {
         await transporter.sendMail(mailOptions);
-        console.log(`Email sent to.: ${mailOptions.to}`);
+        console.log(`Email sent to: ${mailOptions.to}`);
         io.emit('mailStatus', `Email sent to: ${mailOptions.to}`);
         return true; // Indicate success
     } catch (error) {
@@ -219,95 +219,66 @@ app.post('/send-email-admin', async (req, res) => {
     }
 });
 
+// Initialize Socket.IO with the HTTP server
+const io = socketIo(server);
 
-let clients = [];
+let socketClient = null;
 
-// Function to broadcast email sending progress to all connected clients
-function broadcast(message) {
-    clients.forEach(client => client.send(`data: ${message}\n\n`));
-}
-
-const io = socketIo(server); // Initialize Socket.IO with the server
-// Listen for Socket.IO connections
+// Establish WebSocket connection and store the connected client
 io.on('connection', (socket) => {
-    console.log('A user connected');
-
-    // Listen for the sendEmail event
-    socket.on('sendEmail', (data) => {
-         // Call your sendEmailWithRetries function here
-         sendEmailWithRetries(data.to, data.subject, data.message, data.attachment, socket);
-        });
+    console.log('Client connected:', socket.id);
+    socketClient = socket; // Store client socket for emitting events
 
     socket.on('disconnect', () => {
-        console.log('User disconnected');
+        console.log('Client disconnected:', socket.id);
+        socketClient = null;
     });
 });
 
-// POST route to send emails
+
 app.post('/send-email', authenticateUser, async (req, res) => {
     const { to, subject, message } = req.body;
-    const attachment = req.file; // Get the uploaded file
-    
 
-    // Validate email recipients
     if (!to || !Array.isArray(to) || to.length === 0) {
         return res.status(400).json({ message: 'No recipients defined' });
     }
 
     try {
-        // Fetch user and their SMTP credentials from the database
         const user = await User.findById(req.user.id).populate('smtpCredentials');
         if (!user || !user.smtpCredentials || user.smtpCredentials.length === 0) {
             return res.status(400).json({ message: 'No SMTP credentials found for the user.' });
         }
 
-        const today = new Date();
-        const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const maxRetries = 2;
+        const smtpCount = user.smtpCredentials.length;
+        let smtpIndex = 0;
 
-        // Reset count if it's a new day
-        if (user.emailsSentToday.date < todayStart) {
-            user.emailsSentToday.count = 0;
-            user.emailsSentToday.date = today;
-        }
+        const formatMessage = (msg) => msg.trim();
 
-        const maxRetries = 2; // Maximum retries for a failed email
-        const smtpCount = user.smtpCredentials.length; // Get total number of SMTP servers
-        const formatMessage = (msg) => {
-            // Add your formatting logic here
-            // For example, you might want to trim whitespace or escape HTML
-            return msg;
-        };
-
-        if (smtpCount === 0) {
-            return res.status(400).json({ message: 'No SMTP servers configured.' });
-        }
-
-        let smtpIndex = 0; // Index to cycle through SMTP servers
-
-        // Function to send email with retries
         const sendMailWithRetries = async (recipient, smtpCredential) => {
-            const transporter = createTransporter({
-                user: smtpCredential.email,
-                pass: smtpCredential.password,
+            const transporter = nodemailer.createTransport({
                 host: smtpCredential.host,
                 port: smtpCredential.port,
+                secure: false,
+                auth: {
+                    user: smtpCredential.email,
+                    pass: smtpCredential.password,
+                },
             });
 
             const mailOptions = {
                 from: `"${user.username}" <${smtpCredential.email}>`,
                 to: recipient,
                 subject: subject,
-                replyTo: user.email,
                 html: `
-                <div>
-                    <p>${formatMessage(message).replace(/\n/g, '<br>')}</p>
-                    <p style="font-size: small; color: gray;">
-                        This email is sent with <a href="https://birdmailer.in/">Birdmailer.in</a>.
-                    </p>
-                </div>
-            `,
-            text: `This email is sent with Birdmailer.in.`,
-            
+                    <div>
+                        <p>${formatMessage(message).replace(/\n/g, '<br>')}</p>
+                        <p style="font-size: small; color: gray;">
+                            This email is sent with <a href="https://birdmailer.in/">Birdmailer.in</a>.
+                        </p>
+                    </div>
+                `,
+                text: `This email is sent with Birdmailer.in.`,
             };
 
             let retries = 0;
@@ -315,55 +286,42 @@ app.post('/send-email', authenticateUser, async (req, res) => {
 
             while (retries < maxRetries && !emailSent) {
                 try {
-                    await sendEmail(transporter, mailOptions);
-                    broadcast(`Email sent to: ${recipient}`);
-                    
+                    await transporter.sendMail(mailOptions);
+                    if (socketClient) {
+                        socketClient.emit('emailProgress', `Email sent to: ${recipient}`);
+                    }
                     emailSent = true;
                 } catch (error) {
                     retries++;
                     console.error(`Error sending email to ${recipient}: ${error.message}`);
-                    broadcast(`Error sending email to ${recipient}: ${error.message}. Retrying... (${retries}/${maxRetries})`);
-                   
-                   
+                    if (socketClient) {
+                        socketClient.emit(
+                            'emailProgress',
+                            `Error sending email to ${recipient}: ${error.message}. Retrying... (${retries}/${maxRetries})`
+                        );
+                    }
                 }
             }
 
-            if (!emailSent) {
-                console.error(`Failed to send email to ${recipient} after ${maxRetries} attempts. Skipping...`);
-                broadcast(`Failed to send email to ${recipient} after ${maxRetries} attempts. Skipping...`);
-               
+            if (!emailSent && socketClient) {
+                socketClient.emit(
+                    'emailProgress',
+                    `Failed to send email to ${recipient} after ${maxRetries} attempts. Skipping...`
+                );
             }
         };
 
-        // Parallelize email sending using a concurrency limit
-        const concurrencyLimit = 1; // Adjust this based on your server capabilities
-        const emailPromises = [];
+        // Start email sending and progress tracking immediately after receiving the request
+        const emailPromises = to.map(async (recipient) => {
+            const smtpCredential = user.smtpCredentials[smtpIndex];
+            smtpIndex = (smtpIndex + 1) % smtpCount; // Cycle through SMTP servers
+            await sendMailWithRetries(recipient, smtpCredential);
+            await delay(500); // Add delay between emails
+        });
 
-        for (let i = 0; i < to.length; i++) {
-            const smtpCredential = user.smtpCredentials[smtpIndex]; // Cycle through SMTP credentials
-            emailPromises.push(sendMailWithRetries(to[i], smtpCredential));
-
-            smtpIndex = (smtpIndex + 1) % smtpCount; // Rotate SMTP servers
-
-            // Add a delay after each email is sent
-            await delay(500); // Delay in milliseconds (e.g., 500 ms = 0.5 seconds)
-
-
-            // Once we reach the concurrency limit, wait for them to resolve before sending more
-            if (emailPromises.length === concurrencyLimit) {
-                await Promise.all(emailPromises); // Wait for the batch to complete
-                emailPromises.length = 0; // Reset the batch
-            }
-        }
-
-        // Send remaining emails
-        if (emailPromises.length > 0) {
-            await Promise.all(emailPromises);
-        }
-
-        // Increment email sent count after all emails have been sent
-        user.emailsSentToday.count += to.length; // Increment by the number of recipients
-        await user.save(); // Save user to update count
+        await Promise.all(emailPromises);
+        user.emailsSentToday.count += to.length;
+        await user.save();
 
         res.status(200).json({ message: 'All emails sent successfully!' });
     } catch (error) {
@@ -371,6 +329,7 @@ app.post('/send-email', authenticateUser, async (req, res) => {
         res.status(500).json({ message: 'Error sending emails.', error: error.message });
     }
 });
+
 
 // Express API endpoint
 app.get('/api/smtp-settings', authenticateUser, async (req, res) => {
